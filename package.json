@@ -1,0 +1,48 @@
+{
+	"name": "vis-play",
+	"version": "0.0.0",
+	"description": "playing with vis",
+	"author": "<author>",
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:kavsingh/vis-play"
+	},
+	"keywords": [],
+	"license": "MIT",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e",
+	"engines": {
+		"node": ">=20"
+	},
+	"scripts": {
+		"dev": "turbo dev",
+		"test": "turbo test",
+		"lint": "turbo lint"
+	},
+	"devDependencies": {
+		"@eslint/compat": "1.1.1",
+		"@eslint/js": "9.8.0",
+		"@kavsingh/eslint-plugin-filenames": "file:../../community/eslint-plugin-filenames",
+		"@tsconfig/strictest": "2.0.5",
+		"@types/eslint": "9.6.0",
+		"@types/eslint__js": "8.42.3",
+		"@types/node": "20.14.12",
+		"cross-env": "7.0.3",
+		"eslint": "9.8.0",
+		"eslint-config-prettier": "9.1.0",
+		"eslint-import-resolver-typescript": "3.6.1",
+		"eslint-plugin-deprecation": "3.0.0",
+		"eslint-plugin-import-x": "3.1.0",
+		"eslint-plugin-prettier": "5.2.1",
+		"globals": "15.8.0",
+		"npm-run-all": "4.1.5",
+		"prettier": "3.3.3",
+		"rimraf": "6.0.1",
+		"tsx": "4.16.2",
+		"turbo": "2.0.9",
+		"typescript": "5.5.4",
+		"typescript-eslint": "7.17.0",
+		"zod": "3.23.8"
+	}
+}

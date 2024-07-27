@@ -1,0 +1,16 @@
+{
+	"extends": "@tsconfig/strictest/tsconfig.json",
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"lib": ["esnext"],
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"target": "esnext",
+		"noEmit": true,
+		// leave the following to eslint
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"allowUnreachableCode": true
+	}
+}

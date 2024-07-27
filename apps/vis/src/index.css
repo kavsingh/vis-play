@@ -1,0 +1,9 @@
+@import url("./theme.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	@apply bg-background text-primary;
+}
