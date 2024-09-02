@@ -10,25 +10,22 @@ import tailwindPlugin from "eslint-plugin-tailwindcss";
 import testingPlugin from "eslint-plugin-testing-library";
 import vitestPlugin from "eslint-plugin-vitest";
 import globals from "globals";
-import tsEslint from "typescript-eslint";
+import * as tsEslintPlugin from "typescript-eslint";
 
-import baseConfig from "../../eslint.config.js";
-import {
-	testFilePatterns,
-	getImportOrderConfig,
-} from "../../eslint.helpers.js";
+import baseConfig from "../../eslint.config";
+import { testFilePatterns, getImportOrderConfig } from "../../eslint.helpers";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const project = path.resolve(__dirname, "tsconfig.json");
 
-export default tsEslint.config(
+export default tsEslintPlugin.config(
 	{
 		extends: [...baseConfig],
-		languageOptions: { parserOptions: { project } },
+		languageOptions: { parserOptions: { projectService: true } },
 	},
 	{
-		files: ["src/**/*"],
+		files: ["src/**/*.?([mc])[tj]s?(x)"],
 		languageOptions: { globals: { ...globals.browser } },
 		settings: {
 			"import-x/resolver": {
@@ -39,9 +36,11 @@ export default tsEslint.config(
 				callees: ["tv", "classList"],
 			},
 		},
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		extends: [
 			solidPlugin.configs["flat/recommended"],
 			solidPlugin.configs["flat/typescript"],
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 			...tailwindPlugin.configs["flat/recommended"],
 		],
 		rules: {
@@ -52,9 +51,12 @@ export default tsEslint.config(
 	{
 		files: testFilePatterns({ root: "src" }),
 		languageOptions: { globals: { ...globals.node, ...globals.browser } },
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		extends: [
 			vitestPlugin.configs.all,
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			testingPlugin.configs.recommended,
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			jestDomPlugin.configs["flat/recommended"],
 		],
 		rules: {

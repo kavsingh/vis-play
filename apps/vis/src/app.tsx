@@ -1,6 +1,6 @@
-import Nannou from "#nannou";
-
 import Theme from "./theme";
+
+import Nannou from "#nannou";
 
 export default function App() {
 	return (

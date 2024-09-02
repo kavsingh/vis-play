@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => ({
 		checker(mode),
 	] as PluginOption[],
 	test: {
-		include: ["src/**/*.{test,spec}.{js,mjs,cjs,jsx,ts,mts,cts,tsx}"],
+		include: ["src/**/*.{test,spec}.?([mc])[tj]s?(x)"],
 		environment: "jsdom",
 		setupFiles: ["./vitest.setup.ts"],
 		clearMocks: true,
@@ -38,7 +38,7 @@ function checker(mode: string) {
 		overlay: { initialIsOpen: false },
 		typescript: true,
 		eslint: {
-			lintCommand: 'eslint "./src/**/*.+(ts|tsx)"',
+			lintCommand: 'eslint --flag unstable_ts_config "./src"',
 			dev: { logLevel: ["error"] },
 		},
 	});

@@ -2,14 +2,18 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import ts from "typescript";
-import { z } from "zod";
+
+import type { Linter } from "eslint";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const testFileSuffixes = ["test", "spec", "mock"];
 
-export function testFilePatterns({ root = "", extensions = "*" } = {}) {
+export function testFilePatterns({
+	root = "",
+	extensions = "?([mc])[tj]s?(x)",
+} = {}) {
 	return [
 		`*.{${testFileSuffixes.join(",")}}`,
 		"__{test,tests,mocks,fixtures}__/**/*",
@@ -17,49 +21,32 @@ export function testFilePatterns({ root = "", extensions = "*" } = {}) {
 	].map((pattern) => path.join(root, `**/${pattern}.${extensions}`));
 }
 
-const tsConfigSchema = z.object({
-	compilerOptions: z
-		.object({ paths: z.record(z.array(z.string())).optional() })
-		.optional(),
-});
+type TsConfig = {
+	compilerOptions?:
+		| { paths?: Record<string, string[]> | undefined }
+		| undefined;
+};
 
-/** @typedef {import("zod").infer<typeof tsConfigSchema>} TsConfig */
-
-/**
- * @param {string} configPath
- *
- * @returns {TsConfig | undefined}
- **/
-export function readTsConfig(configPath) {
-	const dir = path.isAbsolute(configPath)
-		? path.dirname(configPath)
-		: __dirname;
-
-	const file = path.isAbsolute(configPath)
-		? path.basename(configPath)
-		: configPath;
-
+export function readTsConfig(configPath: string): TsConfig | undefined {
+	const { dir, base: file } = path.parse(path.resolve(configPath));
 	const contents = ts.findConfigFile(dir, ts.sys.fileExists.bind(ts.sys), file);
 
-	return contents
-		? tsConfigSchema.parse(
-				ts.readConfigFile(contents, ts.sys.readFile.bind(ts.sys)).config,
-			)
+	const config: unknown = contents
+		? ts.readConfigFile(contents, ts.sys.readFile.bind(ts.sys)).config
 		: undefined;
+
+	return config && typeof config === "object" ? config : undefined;
 }
 
-/**
- * @typedef {import("eslint").Linter.RuleSeverity} RuleLevel
- *
- * @param {string} tsConfigPath
- * @param {(ruleConfig: Record<string, unknown>, tsconfig: TsConfig | undefined) => Record<string, unknown>} customizer
- *
- * @returns {[RuleLevel, Record<string, unknown>]}
- **/
+type ImportOrderConfigCustomizer = (
+	ruleConfig: Record<string, unknown>,
+	tsconfig: TsConfig | undefined,
+) => Record<string, unknown>;
+
 export function getImportOrderConfig(
-	tsConfigPath,
-	customizer = (ruleConfig) => ruleConfig,
-) {
+	tsConfigPath: string,
+	customizer: ImportOrderConfigCustomizer = (ruleConfig) => ruleConfig,
+): [Linter.RuleSeverity, Record<string, unknown>] {
 	const tsConfig = readTsConfig(tsConfigPath);
 	const aliases = Object.keys(tsConfig?.compilerOptions?.paths ?? {});
 
