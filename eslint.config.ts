@@ -8,11 +8,7 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import globals from "globals";
 import * as tsEslintPlugin from "typescript-eslint";
 
-import {
-	testFilePatterns,
-	testFileSuffixes,
-	getImportOrderConfig,
-} from "./eslint.helpers";
+import { testFilePatterns, testFileSuffixes } from "./eslint.helpers";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,7 +16,9 @@ const __dirname = path.dirname(__filename);
 const project = path.resolve(__dirname, "tsconfig.json");
 
 export default tsEslintPlugin.config(
-	{ ignores: [".vscode/*", "dist/*", "coverage/*"] },
+	{
+		ignores: [".vscode/*", "dist/*", "coverage/*"],
+	},
 
 	{
 		linterOptions: { reportUnusedDisableDirectives: true },
@@ -85,7 +83,22 @@ export default tsEslintPlugin.config(
 			"import-x/no-self-import": "error",
 			"import-x/no-unused-modules": "error",
 			"import-x/no-useless-path-segments": "error",
-			"import-x/order": getImportOrderConfig(project),
+			"import-x/order": [
+				"warn",
+				{
+					"alphabetize": { order: "asc" },
+					"groups": [
+						"builtin",
+						"external",
+						"internal",
+						"parent",
+						["sibling", "index"],
+						"type",
+					],
+					"pathGroupsExcludedImportTypes": ["type"],
+					"newlines-between": "always",
+				},
+			],
 		},
 	},
 

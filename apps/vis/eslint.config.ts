@@ -13,7 +13,7 @@ import globals from "globals";
 import * as tsEslintPlugin from "typescript-eslint";
 
 import baseConfig from "../../eslint.config";
-import { testFilePatterns, getImportOrderConfig } from "../../eslint.helpers";
+import { testFilePatterns } from "../../eslint.helpers";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +24,7 @@ export default tsEslintPlugin.config(
 		extends: [...baseConfig],
 		languageOptions: { parserOptions: { projectService: true } },
 	},
+
 	{
 		files: ["src/**/*.?([mc])[tj]s?(x)"],
 		languageOptions: { globals: { ...globals.browser } },
@@ -45,9 +46,9 @@ export default tsEslintPlugin.config(
 		],
 		rules: {
 			"no-console": "error",
-			"import-x/order": getImportOrderConfig(project),
 		},
 	},
+
 	{
 		files: testFilePatterns({ root: "src" }),
 		languageOptions: { globals: { ...globals.node, ...globals.browser } },
