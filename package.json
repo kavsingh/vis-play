@@ -21,17 +21,17 @@
 		"lint": "turbo lint"
 	},
 	"devDependencies": {
-		"@eslint/js": "9.9.1",
+		"@eslint/js": "9.10.0",
 		"@kavsingh/eslint-plugin-filenames": "2.0.0-rc.0",
 		"@tsconfig/strictest": "2.0.5",
 		"@types/eslint": "9.6.1",
 		"@types/eslint__js": "8.42.3",
-		"@types/node": "22.5.2",
+		"@types/node": "22.5.4",
 		"cross-env": "7.0.3",
-		"eslint": "9.9.1",
+		"eslint": "9.10.0",
 		"eslint-config-prettier": "9.1.0",
 		"eslint-import-resolver-typescript": "3.6.3",
-		"eslint-plugin-import-x": "4.1.1",
+		"eslint-plugin-import-x": "4.2.1",
 		"eslint-plugin-prettier": "5.2.1",
 		"globals": "15.9.0",
 		"jiti": "1.21.6",
@@ -39,7 +39,6 @@
 		"rimraf": "6.0.1",
 		"turbo": "2.1.1",
 		"typescript": "5.5.4",
-		"typescript-eslint": "8.4.0",
-		"zod": "3.23.8"
+		"typescript-eslint": "8.4.0"
 	}
 }

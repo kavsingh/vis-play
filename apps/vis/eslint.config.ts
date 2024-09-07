@@ -22,7 +22,6 @@ const project = path.resolve(__dirname, "tsconfig.json");
 export default tsEslintPlugin.config(
 	{
 		extends: [...baseConfig],
-		languageOptions: { parserOptions: { projectService: true } },
 	},
 
 	{
