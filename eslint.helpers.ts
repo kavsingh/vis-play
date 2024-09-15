@@ -1,4 +1,13 @@
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+export function resolveFrom(fileUrl: string | URL) {
+	const dirname = path.dirname(fileURLToPath(fileUrl));
+
+	return function resolve(...parts: string[]) {
+		return path.resolve(dirname, ...parts);
+	};
+}
 
 export const testFileSuffixes = ["test", "spec", "mock"];
 

@@ -1,6 +1,3 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
 import jsPlugin from "@eslint/js";
 import filenamesPlugin from "@kavsingh/eslint-plugin-filenames";
 import importPlugin from "eslint-plugin-import-x";
@@ -8,12 +5,13 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import globals from "globals";
 import * as tsEslintPlugin from "typescript-eslint";
 
-import { testFilePatterns, testFileSuffixes } from "./eslint.helpers";
+import {
+	resolveFrom,
+	testFilePatterns,
+	testFileSuffixes,
+} from "./eslint.helpers";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const project = path.resolve(__dirname, "tsconfig.json");
+const resolveLocal = resolveFrom(import.meta.url);
 
 export default tsEslintPlugin.config(
 	{
@@ -38,7 +36,9 @@ export default tsEslintPlugin.config(
 	{
 		settings: {
 			"import-x/resolver": {
-				"eslint-import-resolver-typescript": { project: project },
+				"eslint-import-resolver-typescript": {
+					project: resolveLocal("tsconfig.json"),
+				},
 			},
 		},
 		rules: {

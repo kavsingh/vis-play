@@ -1,6 +1,3 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
 // @ts-expect-error no types available
 import jestDomPlugin from "eslint-plugin-jest-dom";
 import solidPlugin from "eslint-plugin-solid";
@@ -13,11 +10,9 @@ import globals from "globals";
 import * as tsEslintPlugin from "typescript-eslint";
 
 import baseConfig from "../../eslint.config";
-import { testFilePatterns } from "../../eslint.helpers";
+import { resolveFrom, testFilePatterns } from "../../eslint.helpers";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const project = path.resolve(__dirname, "tsconfig.json");
+const resolveLocal = resolveFrom(import.meta.url);
 
 export default tsEslintPlugin.config(
 	{
@@ -29,10 +24,12 @@ export default tsEslintPlugin.config(
 		languageOptions: { globals: { ...globals.browser } },
 		settings: {
 			"import-x/resolver": {
-				"eslint-import-resolver-typescript": { project },
+				"eslint-import-resolver-typescript": {
+					project: resolveLocal("tsconfig.json"),
+				},
 			},
 			"tailwindcss": {
-				config: path.resolve(__dirname, "tailwind.config.ts"),
+				config: resolveLocal("tailwind.config.ts"),
 				callees: ["tv", "classList"],
 			},
 		},
