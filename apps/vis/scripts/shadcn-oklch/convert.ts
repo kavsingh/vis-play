@@ -12,10 +12,15 @@ import prettierConfig from "../../../../prettier.config.js";
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 async function themeToOklch() {
+	console.log("┌ converting shadcn theme to oklch");
+	console.log("│ reading theme css...");
+
 	const contents = await fs.readFile(
 		path.resolve(dirname, "./source-theme.css"),
 		"utf-8",
 	);
+
+	console.log("│ converting colors to oklch...");
 
 	/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 	const asJson = cssjson.toJSON(contents).children["@layer base"];
@@ -25,7 +30,11 @@ async function themeToOklch() {
 
 	const formatted = await format(rootStyles, darkStyles);
 
-	return fs.writeFile(path.resolve(dirname, "../../src/theme.css"), formatted);
+	console.log("│ writing theme css...");
+
+	await fs.writeFile(path.resolve(dirname, "../../src/theme.css"), formatted);
+
+	console.log("└ all done");
 }
 
 function format(
@@ -74,7 +83,7 @@ function convertColor(maybeHsl: string) {
 
 		return `${converted.l} ${converted.c} ${converted.h ?? 0}`;
 	} catch (_) {
-		console.warn(`could not parse ${maybeHsl}, skipping...`);
+		console.warn(`│ could not parse ${maybeHsl}, skipping...`);
 
 		return maybeHsl;
 	}
