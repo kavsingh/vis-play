@@ -1,0 +1,6 @@
+[workspace]
+resolver = "2"
+members = ["packages/vis-rs"]
+
+[profile.release]
+opt-level = "s"

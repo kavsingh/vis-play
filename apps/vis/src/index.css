@@ -7,3 +7,7 @@
 :root {
 	@apply bg-background text-primary;
 }
+
+#app-root {
+	@apply w-screen h-screen overflow-hidden;
+}

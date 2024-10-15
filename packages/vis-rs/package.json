@@ -1,0 +1,25 @@
+{
+	"name": "vis-rs",
+	"version": "1.0.0-dev.0",
+	"license": "MIT",
+	"private": true,
+	"type": "module",
+	"files": [
+		"./pkg/*.js",
+		"./pkg/*.wasm",
+		"./pkg/*.d.ts"
+	],
+	"main": "./pkg/vis_rs.js",
+	"types": "./pkg/vis_rs.d.ts",
+	"sideEffects": [
+		"./pkg/vis_rs.js",
+		"./pkg/snippets/*"
+	],
+	"scripts": {
+		"dev": "cargo watch -i .gitignore -i \"pkg/*\" -s \"wasm-pack build\"",
+		"build": "wasm-pack build ."
+	},
+	"devDependencies": {
+		"wasm-pack": "0.13.0"
+	}
+}
