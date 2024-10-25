@@ -20,7 +20,7 @@
 	"author": "<author>",
 	"license": "MIT",
 	"dependencies": {
-		"solid-js": "1.9.2",
+		"solid-js": "1.9.3",
 		"tailwind-variants": "0.2.1",
 		"vis-rs": "workspace:*"
 	},
@@ -44,7 +44,7 @@
 		"eslint-plugin-vitest": "0.5.4",
 		"jsdom": "25.0.1",
 		"tailwindcss": "3.4.14",
-		"vite": "5.4.9",
+		"vite": "5.4.10",
 		"vite-plugin-checker": "0.8.0",
 		"vite-plugin-solid": "2.10.2",
 		"vite-plugin-top-level-await": "1.4.4",
