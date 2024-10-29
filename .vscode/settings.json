@@ -19,7 +19,6 @@
 		"**/out": true,
 		"**/dist": true
 	},
-	"eslint.options": { "flags": ["unstable_ts_config"] },
 	"eslint.workingDirectories": [{ "mode": "auto" }],
 	"tailwindCSS.validate": true,
 	"tailwindCSS.classAttributes": ["class", "classList"],

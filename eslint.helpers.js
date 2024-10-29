@@ -1,15 +1,16 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export function resolveFrom(fileUrl: string | URL) {
+/** @param {string} fileUrl */
+export function resolveFrom(fileUrl) {
 	const dirname = path.dirname(fileURLToPath(fileUrl));
 
-	return function resolve(...parts: string[]) {
+	return function resolve(/** @type {string[]} */ ...parts) {
 		return path.resolve(dirname, ...parts);
 	};
 }
 
-export const testFileSuffixes = ["test", "spec", "mock"];
+export const testFileSuffixes = /** @type {const} */ (["test", "spec", "mock"]);
 
 export function testFilePatterns({
 	root = "",

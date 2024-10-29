@@ -9,7 +9,7 @@ import {
 	resolveFrom,
 	testFilePatterns,
 	testFileSuffixes,
-} from "./eslint.helpers";
+} from "./eslint.helpers.js";
 
 const resolveLocal = resolveFrom(import.meta.url);
 
@@ -112,11 +112,6 @@ export default tsEslint.config(
 			"@typescript-eslint/no-require-imports": "off",
 			"@typescript-eslint/no-var-requires": "off",
 		},
-	},
-
-	{
-		files: ["**/*.?([mc])js?(x)"],
-		extends: [tsEslint.configs.disableTypeChecked],
 	},
 
 	{

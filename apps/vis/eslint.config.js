@@ -9,8 +9,8 @@ import vitest from "eslint-plugin-vitest";
 import globals from "globals";
 import * as tsEslint from "typescript-eslint";
 
-import baseConfig from "../../eslint.config";
-import { resolveFrom, testFilePatterns } from "../../eslint.helpers";
+import baseConfig from "../../eslint.config.js";
+import { resolveFrom, testFilePatterns } from "../../eslint.helpers.js";
 
 const resolveLocal = resolveFrom(import.meta.url);
 
