@@ -150,7 +150,7 @@ impl Boid {
 	}
 
 	fn normalize_steering_vector(&self, v: Vec2) -> Vec2 {
-		let target = v.normalize() * VELOCITY_LIMIT;
+		let target = v.try_normalize().unwrap_or(v) * VELOCITY_LIMIT;
 
 		(target - self.velocity).clamp_length_max(FORCE_LIMIT)
 	}
