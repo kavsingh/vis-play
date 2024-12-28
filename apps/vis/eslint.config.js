@@ -1,48 +1,85 @@
-import { fixupPluginRules } from "@eslint/compat";
-// @ts-expect-error no types available
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import jestDom from "eslint-plugin-jest-dom";
 import solid from "eslint-plugin-solid";
-import tailwindcss from "eslint-plugin-tailwindcss";
-// @ts-expect-error no types available
+import tailwind from "eslint-plugin-tailwindcss";
 import testingLibrary from "eslint-plugin-testing-library";
 import vitest from "eslint-plugin-vitest";
 import globals from "globals";
 import * as tsEslint from "typescript-eslint";
 
 import baseConfig from "../../eslint.config.js";
-import { resolveFrom, testFilePatterns } from "../../eslint.helpers.js";
+import { testFilePatterns, testFileSuffixes } from "../../eslint.helpers.js";
 
-const resolveLocal = resolveFrom(import.meta.url);
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default tsEslint.config(
 	...baseConfig,
 
 	{
-		ignores: ["dist/*", "coverage/*"],
+		ignores: [
+			"src-tauri/*",
+			"dist/*",
+			"dist-isolation/*",
+			"coverage/*",
+			"**/__generated__/*",
+			"!**/__generated__/__mocks__/",
+		],
 	},
 
 	{
-		files: ["src/**/*.?([mc])[tj]s?(x)"],
-		languageOptions: { globals: { ...globals.browser } },
 		settings: {
 			"import-x/resolver": {
 				"eslint-import-resolver-typescript": {
-					project: resolveLocal("tsconfig.json"),
+					project: path.resolve(dirname, "tsconfig.json"),
 				},
 			},
-			"tailwindcss": {
-				config: resolveLocal("tailwind.config.ts"),
+		},
+	},
+
+	{
+		files: ["src/**/*.?(m|c)[tj]s?(x)"],
+		languageOptions: {
+			globals: { ...globals.browser },
+		},
+		settings: {
+			tailwindcss: {
+				config: path.join(dirname, "tailwind.config.ts"),
 				callees: ["tv", "classList"],
 			},
 		},
-
 		extends: [
+			...tailwind.configs["flat/recommended"],
 			solid.configs["flat/recommended"],
-			solid.configs["flat/typescript"],
-			...tailwindcss.configs["flat/recommended"],
 		],
 		rules: {
 			"no-console": "error",
+		},
+	},
+
+	{
+		files: testFilePatterns(),
+		languageOptions: {
+			globals: { ...globals.node },
+		},
+		rules: {
+			"no-console": "off",
+			"filenames/match-exported": [
+				"error",
+				{
+					transforms: ["kebab"],
+					remove: `\\.(${testFileSuffixes.join("|")})$`,
+				},
+			],
+			"@typescript-eslint/no-explicit-any": "off",
+			"@typescript-eslint/no-non-null-assertion": "off",
+			"@typescript-eslint/no-unsafe-argument": "off",
+			"@typescript-eslint/no-unsafe-assignment": "off",
+			"@typescript-eslint/no-unsafe-call": "off",
+			"@typescript-eslint/no-unsafe-member-access": "off",
+			"@typescript-eslint/no-unsafe-return": "off",
+			"@typescript-eslint/unbound-method": "off",
 		},
 	},
 
@@ -51,22 +88,12 @@ export default tsEslint.config(
 		languageOptions: {
 			globals: { ...globals.node, ...globals.browser },
 		},
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		extends: [
 			vitest.configs.all,
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+			testingLibrary.configs["flat/dom"],
 			jestDom.configs["flat/recommended"],
 		],
-		plugins: {
-			"testing-library": fixupPluginRules({
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-				rules: testingLibrary.rules,
-			}),
-		},
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		rules: {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-			...testingLibrary.configs["flat/dom"].rules,
 			"vitest/no-hooks": "off",
 		},
 	},

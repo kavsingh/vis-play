@@ -1,5 +1,3 @@
-/// <reference types="vitest" />
-
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -17,22 +15,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig(({ mode }) => ({
 	build: { sourcemap: true },
 	plugins: [
-		tsconfigPathsPlugin({
-			projects: [path.resolve(__dirname, "tsconfig.json")],
-		}),
+		tsconfigPathsPlugin(),
 		topLevelAwaitPlugin(),
 		solidPlugin(),
 		wasmPlugin(),
 		checker(mode),
 	] as PluginOption[],
-	test: {
-		include: ["src/**/*.{test,spec}.?([mc])[tj]s?(x)"],
-		environment: "jsdom",
-		setupFiles: ["./vitest.setup.ts"],
-		clearMocks: true,
-		testTransformMode: { web: ["/.[jt]sx?$/"] },
-		server: { deps: { inline: [/@solidjs/] } },
-	},
 }));
 
 function checker(mode: string) {

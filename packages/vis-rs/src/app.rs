@@ -48,7 +48,7 @@ async fn create_window(app: &App) {
 			},
 			..Default::default()
 		})
-		.title("nannou vis")
+		.title("vis-rs")
 		.view(view)
 		.build_async()
 		.await

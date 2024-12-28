@@ -55,8 +55,5 @@ export default {
 			},
 		},
 	},
-	plugins: [
-		// @ts-expect-error upstream exact-optionals incompat
-		containerQueriesPlugin,
-	],
+	plugins: [containerQueriesPlugin],
 } satisfies Config;

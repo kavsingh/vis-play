@@ -1,16 +1,18 @@
 import { onMount } from "solid-js";
 
-export default function Nannou() {
+export default function Vis() {
 	let containerEl: HTMLDivElement | null = null;
 
 	async function startAndContain() {
 		if (!containerEl) return;
 
-		await startNannou();
+		await startVis();
 
-		const nannouEl = document.querySelector("[alt='nannou vis']");
+		const nannouEl = document.querySelector("[alt='vis-rs']");
 
-		if (!(nannouEl instanceof HTMLCanvasElement)) return;
+		if (!(nannouEl instanceof HTMLCanvasElement)) {
+			throw new Error("expected a canvas element with alt=vis-rs");
+		}
 
 		containerEl.appendChild(nannouEl);
 	}
@@ -27,8 +29,8 @@ export default function Nannou() {
 	);
 }
 
-async function startNannou() {
-	const { main_web: nannou } = await import("vis-rs");
+async function startVis() {
+	const { main_web: main } = await import("vis-rs");
 
-	await nannou();
+	await main();
 }

@@ -1,4 +1,4 @@
-import { onCleanup } from "solid-js";
+import { onCleanup, onMount } from "solid-js";
 
 export default function Theme() {
 	const darkSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -7,9 +7,10 @@ export default function Theme() {
 		document.documentElement.classList.toggle("dark", ev.matches);
 	}
 
-	handleQuery({ matches: darkSchemeQuery.matches });
-
-	darkSchemeQuery.addEventListener("change", handleQuery);
+	onMount(() => {
+		handleQuery({ matches: darkSchemeQuery.matches });
+		darkSchemeQuery.addEventListener("change", handleQuery);
+	});
 
 	onCleanup(() => {
 		darkSchemeQuery.removeEventListener("change", handleQuery);

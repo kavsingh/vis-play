@@ -1,20 +1,10 @@
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
-/** @param {string} fileUrl */
-export function resolveFrom(fileUrl) {
-	const dirname = path.dirname(fileURLToPath(fileUrl));
-
-	return function resolve(/** @type {string[]} */ ...parts) {
-		return path.resolve(dirname, ...parts);
-	};
-}
-
-export const testFileSuffixes = /** @type {const} */ (["test", "spec", "mock"]);
+export const testFileSuffixes = ["test", "spec", "mock"];
 
 export function testFilePatterns({
 	root = "",
-	extensions = "?([mc])[tj]s?(x)",
+	extensions = "?(m|c)[tj]s?(x)",
 } = {}) {
 	return [
 		`*.{${testFileSuffixes.join(",")}}`,

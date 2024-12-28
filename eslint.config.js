@@ -5,17 +5,17 @@ import prettierRecommended from "eslint-plugin-prettier/recommended";
 import globals from "globals";
 import * as tsEslint from "typescript-eslint";
 
-import {
-	resolveFrom,
-	testFilePatterns,
-	testFileSuffixes,
-} from "./eslint.helpers.js";
-
-const resolveLocal = resolveFrom(import.meta.url);
-
 export default tsEslint.config(
 	{
-		ignores: [".vscode/*", "dist/*", "coverage/*"],
+		ignores: [
+			".vscode/*",
+			".turbo/*",
+			".rsw/*",
+			".temp/*",
+			"target/*",
+			"apps/*",
+			"packages/*",
+		],
 	},
 
 	{
@@ -34,16 +34,8 @@ export default tsEslint.config(
 	filenames.configs.kebab,
 
 	{
-		settings: {
-			"import-x/resolver": {
-				"eslint-import-resolver-typescript": {
-					project: resolveLocal("tsconfig.json"),
-				},
-			},
-		},
 		rules: {
 			"camelcase": "off",
-			"curly": ["warn", "multi-line", "consistent"],
 			"no-console": "off",
 			"no-restricted-syntax": [
 				"warn",
@@ -115,34 +107,18 @@ export default tsEslint.config(
 	},
 
 	{
-		files: ["*.?([mc])[tj]s?(x)"],
+		files: ["*.?(m|c)[tj]s?(x)"],
 		rules: {
 			"filenames/match-exported": "off",
 		},
 	},
 
+	prettierRecommended,
+
 	{
-		files: testFilePatterns(),
-		languageOptions: { globals: { ...globals.node } },
 		rules: {
-			"no-console": "off",
-			"filenames/match-exported": [
-				"error",
-				{
-					transforms: ["kebab"],
-					remove: `\\.(${testFileSuffixes.join("|")})$`,
-				},
-			],
-			"@typescript-eslint/no-explicit-any": "off",
-			"@typescript-eslint/no-non-null-assertion": "off",
-			"@typescript-eslint/no-unsafe-argument": "off",
-			"@typescript-eslint/no-unsafe-assignment": "off",
-			"@typescript-eslint/no-unsafe-call": "off",
-			"@typescript-eslint/no-unsafe-member-access": "off",
-			"@typescript-eslint/no-unsafe-return": "off",
-			"@typescript-eslint/unbound-method": "off",
+			"curly": ["warn", "multi-line", "consistent"],
+			"prettier/prettier": "warn",
 		},
 	},
-
-	prettierRecommended,
 );
