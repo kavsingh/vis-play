@@ -1,4 +1,5 @@
-use nannou::{color::Lab, prelude::*};
+use nannou::color::Lab;
+use nannou::prelude::*;
 use uuid::Uuid;
 
 const FORCE_LIMIT: f32 = 0.2;
@@ -17,6 +18,16 @@ pub struct Weights {
 	pub alignment: f32,
 	pub cohesion: f32,
 	pub separation: f32,
+}
+
+impl Default for Weights {
+	fn default() -> Self {
+		Self {
+			alignment: 1.0,
+			cohesion: 1.0,
+			separation: 1.6,
+		}
+	}
 }
 
 impl Boid {

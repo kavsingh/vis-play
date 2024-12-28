@@ -1,10 +1,8 @@
 use std::cell::RefCell;
 
-use nannou::{
-	color::{white_point, Laba},
-	prelude::*,
-	wgpu::{Backends, DeviceDescriptor, Limits},
-};
+use nannou::color::{white_point, Laba};
+use nannou::prelude::*;
+use nannou::wgpu::{Backends, DeviceDescriptor, Limits};
 
 use crate::boid::{Boid, Weights};
 
@@ -15,14 +13,10 @@ pub struct Model {
 }
 
 impl Default for Model {
-	fn default() -> Model {
-		Model {
+	fn default() -> Self {
+		Self {
 			flock: vec![],
-			weights: Weights {
-				alignment: 1.0,
-				cohesion: 1.0,
-				separation: 1.6,
-			},
+			weights: Weights::default(),
 			bg_color: Laba::new(0.0, 0.0, 0.0, 0.4),
 		}
 	}
