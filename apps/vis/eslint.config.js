@@ -46,7 +46,7 @@ export default tsEslint.config(
 		settings: {
 			tailwindcss: {
 				config: path.join(dirname, "tailwind.config.ts"),
-				callees: ["tv", "classList"],
+				callees: ["tv", "class", "classList"],
 			},
 		},
 		extends: [
