@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 
-use nannou::color::{white_point, Laba};
+use nannou::color::{white_point, Lab, Laba};
 use nannou::prelude::*;
 use nannou::wgpu::{Backends, DeviceDescriptor, Limits};
 
@@ -8,6 +8,7 @@ use crate::boid::{Boid, Weights};
 
 pub struct Model {
 	flock: Vec<Boid>,
+	attractors: Vec<Point2>,
 	weights: Weights,
 	bg_color: Laba<white_point::D65>,
 }
@@ -16,6 +17,7 @@ impl Default for Model {
 	fn default() -> Self {
 		Self {
 			flock: vec![],
+			attractors: vec![],
 			weights: Weights::default(),
 			bg_color: Laba::new(0.0, 0.0, 0.0, 0.4),
 		}
@@ -56,7 +58,7 @@ fn update(app: &App, model: &mut Model, _update: Update) {
 	model
 		.flock
 		.iter_mut()
-		.for_each(|boid| boid.update(&flock, &model.weights, &bounds));
+		.for_each(|boid| boid.update(&flock, &model.attractors, &model.weights, &bounds));
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {
@@ -68,6 +70,14 @@ fn view(app: &App, model: &Model, frame: Frame) {
 		.color(model.bg_color);
 
 	model.flock.iter().for_each(|boid| boid.draw(&draw));
+
+	#[cfg(debug_assertions)]
+	model.attractors.iter().for_each(|attractor| {
+		draw.ellipse()
+			.x_y(attractor.x, attractor.y)
+			.w_h(3.0, 3.0)
+			.color(Lab::new(68.0, -0.21, -48.9));
+	});
 
 	draw.to_frame(app, &frame).unwrap();
 }

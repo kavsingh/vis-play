@@ -15,17 +15,19 @@ pub struct Boid {
 }
 
 pub struct Weights {
-	pub alignment: f32,
-	pub cohesion: f32,
-	pub separation: f32,
+	pub seek: f32,
+	pub align: f32,
+	pub cohere: f32,
+	pub separate: f32,
 }
 
 impl Default for Weights {
 	fn default() -> Self {
 		Self {
-			alignment: 1.0,
-			cohesion: 1.0,
-			separation: 1.6,
+			seek: 1.0,
+			align: 1.0,
+			cohere: 1.0,
+			separate: 1.6,
 		}
 	}
 }
@@ -48,11 +50,19 @@ impl Boid {
 		}
 	}
 
-	pub fn update(&mut self, flock: &[Boid], weights: &Weights, bounds: &Rect) {
+	pub fn update(
+		&mut self,
+		flock: &[Boid],
+		attractors: &[Point2],
+		weights: &Weights,
+		bounds: &Rect,
+	) {
 		self.wrap(bounds);
-		self.acceleration = self.align(flock) * weights.alignment
-			+ self.cohere(flock) * weights.cohesion
-			+ self.separate(flock) * weights.separation;
+
+		self.acceleration = self.seek(attractors) * weights.seek
+			+ self.align(flock) * weights.align
+			+ self.cohere(flock) * weights.cohere
+			+ self.separate(flock) * weights.separate;
 		self.position += self.velocity;
 		self.velocity = (self.velocity + self.acceleration).clamp_length_max(VELOCITY_LIMIT);
 	}
@@ -62,6 +72,18 @@ impl Boid {
 			.x_y(self.position.x, self.position.y)
 			.w_h(3.0, 3.0)
 			.color(self.color);
+	}
+
+	fn seek(&self, attractors: &[Point2]) -> Vec2 {
+		if attractors.is_empty() {
+			return vec2(0.0, 0.0);
+		}
+
+		let total = attractors.iter().fold(vec2(0.0, 0.0), |acc, attractor| {
+			acc + (*attractor - self.position) / (attractor.distance(self.position))
+		});
+
+		self.normalize_steering_vector(total / attractors.len() as f32)
 	}
 
 	fn align(&self, flock: &[Boid]) -> Vec2 {
