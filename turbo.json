@@ -5,6 +5,9 @@
 			"outputs": ["dist/**", "pkg/**"],
 			"dependsOn": ["^build"]
 		},
+		"preview": {
+			"persistent": true
+		},
 		"dev": {
 			"cache": false,
 			"persistent": true

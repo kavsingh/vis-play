@@ -19,7 +19,8 @@
 		"dev": "turbo dev",
 		"build": "turbo build",
 		"test": "turbo test",
-		"lint": "turbo lint"
+		"lint": "turbo lint",
+		"preview": "turbo preview"
 	},
 	"devDependencies": {
 		"@eslint/js": "9.17.0",
