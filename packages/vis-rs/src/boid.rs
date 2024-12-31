@@ -6,7 +6,7 @@ const VELOCITY_LIMIT: f32 = 4.0;
 
 #[derive(Clone)]
 pub struct Boid {
-	id: i32,
+	id: u32,
 	position: Point2,
 	velocity: Vec2,
 	acceleration: Vec2,
@@ -32,7 +32,7 @@ impl Default for Weights {
 }
 
 impl Boid {
-	pub fn create(id: i32, bounds: &Rect) -> Boid {
+	pub fn create(id: u32, bounds: &Rect) -> Boid {
 		Boid {
 			id,
 			position: pt2(
