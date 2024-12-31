@@ -18,7 +18,7 @@ pub struct Weights {
 	pub seek: f32,
 	pub align: f32,
 	pub cohere: f32,
-	pub separate: f32,
+	pub disperse: f32,
 }
 
 impl Default for Weights {
@@ -27,7 +27,7 @@ impl Default for Weights {
 			seek: 1.0,
 			align: 1.0,
 			cohere: 1.0,
-			separate: 1.6,
+			disperse: 1.6,
 		}
 	}
 }
@@ -59,12 +59,49 @@ impl Boid {
 	) {
 		self.wrap(bounds);
 
-		self.acceleration = self.seek(attractors) * weights.seek
-			+ self.align(flock) * weights.align
-			+ self.cohere(flock) * weights.cohere
-			+ self.separate(flock) * weights.separate;
-		self.position += self.velocity;
+		let mut seek = attractors.iter().fold(vec2(0.0, 0.0), |acc, attractor| {
+			acc + (*attractor - self.position) / (attractor.distance(self.position))
+		});
+
+		if attractors.len() > 1 {
+			seek /= attractors.len() as f32;
+		}
+
+		let mut align = vec2(0.0, 0.0);
+		let mut cohere = vec2(0.0, 0.0);
+		let mut disperse = vec2(0.0, 0.0);
+		let mut cohere_neighbors = 0.0;
+
+		for other in flock.iter() {
+			if other == self {
+				continue;
+			}
+
+			let distance = other.position.distance(self.position);
+
+			if distance < 50.0 {
+				cohere += other.position;
+				cohere_neighbors += 1.0;
+			}
+
+			if distance < 25.0 {
+				align += other.velocity;
+				disperse += (self.position - other.position)
+					/ self.position.distance_squared(other.position);
+			}
+		}
+
+		if cohere_neighbors > 0.0 {
+			cohere = (cohere / cohere_neighbors) - self.position;
+		}
+
+		self.acceleration = (self.normalize_steering_vector(seek) * weights.seek)
+			+ (self.normalize_steering_vector(align) * weights.align)
+			+ (self.normalize_steering_vector(cohere) * weights.cohere)
+			+ (self.normalize_steering_vector(disperse) * weights.disperse);
+
 		self.velocity = (self.velocity + self.acceleration).clamp_length_max(VELOCITY_LIMIT);
+		self.position += self.velocity;
 	}
 
 	pub fn draw(&self, draw: &Draw) {
@@ -72,59 +109,6 @@ impl Boid {
 			.x_y(self.position.x, self.position.y)
 			.w_h(3.0, 3.0)
 			.color(self.color);
-	}
-
-	fn seek(&self, attractors: &[Point2]) -> Vec2 {
-		if attractors.is_empty() {
-			return vec2(0.0, 0.0);
-		}
-
-		let total = attractors.iter().fold(vec2(0.0, 0.0), |acc, attractor| {
-			acc + (*attractor - self.position) / (attractor.distance(self.position))
-		});
-
-		self.normalize_steering_vector(total / attractors.len() as f32)
-	}
-
-	fn align(&self, flock: &[Boid]) -> Vec2 {
-		let group = self.local_group(flock, 25.0);
-
-		let total = group
-			.iter()
-			.fold(vec2(0.0, 0.0), |acc, boid| acc + boid.velocity);
-
-		self.normalize_steering_vector(total)
-	}
-
-	fn cohere(&self, flock: &[Boid]) -> Vec2 {
-		let group = self.local_group(flock, 50.0);
-
-		if group.is_empty() {
-			return vec2(0.0, 0.0);
-		}
-
-		let total = group
-			.iter()
-			.fold(vec2(0.0, 0.0), |acc, boid| acc + boid.position);
-
-		self.normalize_steering_vector((total / group.len() as f32) - self.position)
-	}
-
-	fn separate(&self, flock: &[Boid]) -> Vec2 {
-		let group = self.local_group(flock, 25.0);
-
-		let total = group.iter().fold(vec2(0.0, 0.0), |acc, boid| {
-			acc + (self.position - boid.position) / (self.position.distance_squared(boid.position))
-		});
-
-		self.normalize_steering_vector(total)
-	}
-
-	fn local_group<'a>(&self, flock: &'a [Boid], radius: f32) -> Vec<&'a Boid> {
-		flock
-			.iter()
-			.filter(|boid| *boid != self && boid.position.distance(self.position) < radius)
-			.collect()
 	}
 
 	fn wrap(&mut self, bounds: &Rect) {
