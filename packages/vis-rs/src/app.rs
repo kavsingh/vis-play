@@ -4,12 +4,14 @@ use nannou::color::{white_point, Lab, Laba};
 use nannou::prelude::*;
 use nannou::wgpu::{Backends, DeviceDescriptor, Limits};
 
-use crate::boid::{Boid, Weights};
+use crate::boid::Boid;
+use crate::params::{Distances, Weights};
 
 pub struct Model {
 	flock: Vec<Boid>,
-	attractors: Vec<Point2>,
+	distances: Distances,
 	weights: Weights,
+	attractors: Vec<Point2>,
 	bg_color: Laba<white_point::D65>,
 }
 
@@ -17,8 +19,9 @@ impl Default for Model {
 	fn default() -> Self {
 		Self {
 			flock: vec![],
-			attractors: vec![],
+			distances: Distances::default(),
 			weights: Weights::default(),
+			attractors: vec![],
 			bg_color: Laba::new(0.0, 0.0, 0.0, 0.4),
 		}
 	}
@@ -35,7 +38,7 @@ pub async fn run_app(model: Model) {
 			MODEL.with(|m| {
 				let mut app_model = m.borrow_mut().take().unwrap();
 				let bounds = app.window_rect();
-				let count = if cfg!(debug_assertions) { 320 } else { 2300 };
+				let count = if cfg!(debug_assertions) { 320 } else { 2_300 };
 
 				for id in 0..count {
 					app_model.flock.push(Boid::create(id, &bounds));
@@ -55,10 +58,15 @@ fn update(app: &App, model: &mut Model, _update: Update) {
 	let flock = model.flock.clone();
 	let bounds = app.window_rect();
 
-	model
-		.flock
-		.iter_mut()
-		.for_each(|boid| boid.update(&flock, &model.attractors, &model.weights, &bounds));
+	model.flock.iter_mut().for_each(|boid| {
+		boid.update(
+			&flock,
+			&model.distances,
+			&model.weights,
+			&model.attractors,
+			&bounds,
+		)
+	});
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {

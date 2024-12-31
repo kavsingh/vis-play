@@ -4,6 +4,7 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 mod app;
 mod boid;
+mod params;
 
 use async_std::task::block_on;
 use wasm_bindgen::prelude::wasm_bindgen;

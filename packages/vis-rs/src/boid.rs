@@ -1,38 +1,22 @@
 use nannou::color::Lab;
 use nannou::prelude::*;
 
+use crate::params::{Distances, Weights};
+
 const FORCE_LIMIT: f32 = 0.2;
 const VELOCITY_LIMIT: f32 = 4.0;
 
 #[derive(Clone)]
 pub struct Boid {
-	id: u32,
+	id: u16,
 	position: Point2,
 	velocity: Vec2,
 	acceleration: Vec2,
 	color: Lab,
 }
 
-pub struct Weights {
-	pub seek: f32,
-	pub align: f32,
-	pub cohere: f32,
-	pub disperse: f32,
-}
-
-impl Default for Weights {
-	fn default() -> Self {
-		Self {
-			seek: 1.0,
-			align: 1.0,
-			cohere: 1.0,
-			disperse: 1.6,
-		}
-	}
-}
-
 impl Boid {
-	pub fn create(id: u32, bounds: &Rect) -> Boid {
+	pub fn create(id: u16, bounds: &Rect) -> Boid {
 		Boid {
 			id,
 			position: pt2(
@@ -52,8 +36,9 @@ impl Boid {
 	pub fn update(
 		&mut self,
 		flock: &[Boid],
-		attractors: &[Point2],
+		distances: &Distances,
 		weights: &Weights,
+		attractors: &[Point2],
 		bounds: &Rect,
 	) {
 		self.wrap(bounds);
@@ -69,7 +54,7 @@ impl Boid {
 		let mut align = vec2(0.0, 0.0);
 		let mut cohere = vec2(0.0, 0.0);
 		let mut disperse = vec2(0.0, 0.0);
-		let mut cohere_neighbors = 0.0;
+		let mut cohere_count = 0.0;
 
 		for other in flock.iter() {
 			if other == self {
@@ -78,20 +63,23 @@ impl Boid {
 
 			let distance = other.position.distance(self.position);
 
-			if distance < 50.0 {
+			if distance < distances.cohere {
 				cohere += other.position;
-				cohere_neighbors += 1.0;
+				cohere_count += 1.0;
 			}
 
-			if distance < 25.0 {
+			if distance < distances.align {
 				align += other.velocity;
+			}
+
+			if distance < distances.disperse {
 				disperse += (self.position - other.position)
 					/ self.position.distance_squared(other.position);
 			}
 		}
 
-		if cohere_neighbors > 0.0 {
-			cohere = (cohere / cohere_neighbors) - self.position;
+		if cohere_count > 0.0 {
+			cohere = (cohere / cohere_count) - self.position;
 		}
 
 		self.acceleration = (self.normalize_steering_vector(seek) * weights.seek)
