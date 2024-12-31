@@ -89,15 +89,11 @@ impl Boid {
 	fn align(&self, flock: &[Boid]) -> Vec2 {
 		let group = self.local_group(flock, 25.0);
 
-		if group.is_empty() {
-			return vec2(0.0, 0.0);
-		}
-
 		let total = group
 			.iter()
 			.fold(vec2(0.0, 0.0), |acc, boid| acc + boid.velocity);
 
-		self.normalize_steering_vector(total / group.len() as f32)
+		self.normalize_steering_vector(total)
 	}
 
 	fn cohere(&self, flock: &[Boid]) -> Vec2 {
@@ -117,15 +113,11 @@ impl Boid {
 	fn separate(&self, flock: &[Boid]) -> Vec2 {
 		let group = self.local_group(flock, 25.0);
 
-		if group.is_empty() {
-			return vec2(0.0, 0.0);
-		}
-
 		let total = group.iter().fold(vec2(0.0, 0.0), |acc, boid| {
 			acc + (self.position - boid.position) / (self.position.distance_squared(boid.position))
 		});
 
-		self.normalize_steering_vector(total / group.len() as f32)
+		self.normalize_steering_vector(total)
 	}
 
 	fn local_group<'a>(&self, flock: &'a [Boid], radius: f32) -> Vec<&'a Boid> {
@@ -150,7 +142,14 @@ impl Boid {
 	}
 
 	fn normalize_steering_vector(&self, v: Vec2) -> Vec2 {
-		let target = v.try_normalize().unwrap_or(v) * VELOCITY_LIMIT;
+		if v.length() == 0.0 {
+			return v;
+		}
+
+		let target = match v.try_normalize() {
+			Some(vec) => vec * VELOCITY_LIMIT,
+			None => v,
+		};
 
 		(target - self.velocity).clamp_length_max(FORCE_LIMIT)
 	}
