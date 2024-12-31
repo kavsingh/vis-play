@@ -1,13 +1,12 @@
 use nannou::color::Lab;
 use nannou::prelude::*;
-use uuid::Uuid;
 
 const FORCE_LIMIT: f32 = 0.2;
 const VELOCITY_LIMIT: f32 = 4.0;
 
 #[derive(Clone)]
 pub struct Boid {
-	id: String,
+	id: i32,
 	position: Point2,
 	velocity: Vec2,
 	acceleration: Vec2,
@@ -33,9 +32,9 @@ impl Default for Weights {
 }
 
 impl Boid {
-	pub fn create(bounds: &Rect) -> Boid {
+	pub fn create(id: i32, bounds: &Rect) -> Boid {
 		Boid {
-			id: Uuid::new_v4().to_string(),
+			id,
 			position: pt2(
 				random_range(bounds.left(), bounds.right()),
 				random_range(bounds.bottom(), bounds.top()),
