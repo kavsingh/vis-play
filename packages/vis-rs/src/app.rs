@@ -22,7 +22,7 @@ impl Default for Model {
 			distances: Distances::default(),
 			weights: Weights::default(),
 			attractors: vec![],
-			bg_color: Laba::new(0.0, 0.0, 0.0, 0.4),
+			bg_color: Laba::new(0.0, 0.0, 0.0, 1.0),
 		}
 	}
 }
@@ -38,7 +38,7 @@ pub async fn run_app(model: Model) {
 			MODEL.with(|m| {
 				let mut app_model = m.borrow_mut().take().unwrap();
 				let bounds = app.window_rect();
-				let count = if cfg!(debug_assertions) { 320 } else { 2_300 };
+				let count = if cfg!(debug_assertions) { 400 } else { 3_000 };
 
 				for id in 0..count {
 					app_model.flock.push(Boid::create(id, &bounds));
@@ -58,7 +58,7 @@ fn update(app: &App, model: &mut Model, _update: Update) {
 	let flock = model.flock.clone();
 	let bounds = app.window_rect();
 
-	model.flock.iter_mut().for_each(|boid| {
+	for boid in model.flock.iter_mut() {
 		boid.update(
 			&flock,
 			&model.distances,
@@ -66,18 +66,16 @@ fn update(app: &App, model: &mut Model, _update: Update) {
 			&model.attractors,
 			&bounds,
 		)
-	});
+	}
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {
 	let draw = app.draw();
 
 	draw.rect()
-		.x_y(frame.rect().x(), frame.rect().y())
+		.xy(frame.rect().xy())
 		.wh(frame.rect().wh())
 		.color(model.bg_color);
-
-	model.flock.iter().for_each(|boid| boid.draw(&draw));
 
 	#[cfg(debug_assertions)]
 	model.attractors.iter().for_each(|attractor| {
@@ -86,6 +84,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
 			.w_h(3.0, 3.0)
 			.color(Lab::new(68.0, -0.21, -48.9));
 	});
+
+	for boid in model.flock.iter() {
+		boid.draw(&draw)
+	}
 
 	draw.to_frame(app, &frame).unwrap();
 }
