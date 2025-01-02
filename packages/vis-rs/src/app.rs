@@ -38,7 +38,7 @@ pub async fn run_app(model: Model) {
 			MODEL.with(|m| {
 				let mut app_model = m.borrow_mut().take().unwrap();
 				let bounds = app.window_rect();
-				let count = if cfg!(debug_assertions) { 400 } else { 3_000 };
+				let count = if cfg!(debug_assertions) { 400 } else { 3_400 };
 
 				for id in 0..count {
 					app_model.flock.push(Boid::create(id, &bounds));

@@ -92,17 +92,11 @@ impl Boid {
 	}
 
 	pub fn draw(&self, draw: &Draw) {
-		draw.tri()
-			.xy(self.position)
-			.w_h(6.0, 4.0)
-			.z_radians(self.velocity.angle())
-			.color(self.color);
-
-		#[cfg(debug_assertions)]
 		draw.rect()
 			.xy(self.position)
-			.w_h(2.0, 2.0)
-			.color(Lab::new(100.0, 0.0, 0.0));
+			.w_h(6.0, 2.0)
+			.z_radians(self.velocity.angle())
+			.color(self.color);
 	}
 
 	fn wrap(&mut self, bounds: &Rect) {
