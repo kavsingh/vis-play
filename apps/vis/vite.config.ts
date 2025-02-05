@@ -14,6 +14,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ mode }) => ({
 	build: { sourcemap: true },
+	esbuild: { supported: { "top-level-await": true } },
 	plugins: [
 		tsconfigPathsPlugin(),
 		topLevelAwaitPlugin(),
