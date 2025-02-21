@@ -71,6 +71,7 @@ export default tsEslint.config(
 				},
 			],
 			"import-x/consistent-type-specifier-style": ["error", "prefer-top-level"],
+			"import-x/extensions": ["error", "ignorePackages"],
 			"import-x/no-cycle": "error",
 			"import-x/no-self-import": "error",
 			"import-x/no-unused-modules": "error",

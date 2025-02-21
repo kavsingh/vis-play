@@ -1,6 +1,5 @@
-import Vis from "#vis";
-
-import Theme from "./theme";
+import Theme from "./theme.tsx";
+import Vis from "./vis.tsx";
 
 export default function App() {
 	return (

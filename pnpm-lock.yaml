@@ -14,6 +14,9 @@ importers:
       '@kavsingh/eslint-plugin-filenames':
         specifier: 2.0.0-rc.1
         version: 2.0.0-rc.1(eslint@9.20.1(jiti@1.21.7))
+      '@tsconfig/node23':
+        specifier: 23.0.0
+        version: 23.0.0
       '@tsconfig/strictest':
         specifier: 2.0.5
         version: 2.0.5
@@ -754,6 +757,9 @@ packages:
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
+
+  '@tsconfig/node23@23.0.0':
+    resolution: {integrity: sha512-a2qO9QOEWnomKbFFE3XlOJ5za6Sc+XduxQkFpah42enbTPFPaW0QzKw616KDNfmMLPhXMwCw4EHVjcKaFOj/OA==}
 
   '@tsconfig/strictest@2.0.5':
     resolution: {integrity: sha512-ec4tjL2Rr0pkZ5hww65c+EEPYwxOi4Ryv+0MtjeaSQRJyq322Q27eOQiFbuNgw2hpL4hB1/W/HBGk3VKS43osg==}
@@ -3074,6 +3080,8 @@ snapshots:
   '@testing-library/user-event@14.6.1(@testing-library/dom@10.4.0)':
     dependencies:
       '@testing-library/dom': 10.4.0
+
+  '@tsconfig/node23@23.0.0': {}
 
   '@tsconfig/strictest@2.0.5': {}
 

@@ -1,5 +1,6 @@
 {
-	"extends": "./tsconfig.base.json",
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": ["./tsconfig.base.json", "@tsconfig/node23/tsconfig.json"],
 	"exclude": ["**/node_modules"],
 	"include": ["./*.ts", "./*.js"]
 }

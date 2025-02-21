@@ -1,6 +1,3 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
 import { defineConfig } from "vite";
 import { checker as checkerPlugin } from "vite-plugin-checker";
 import solidPlugin from "vite-plugin-solid";
@@ -10,15 +7,15 @@ import tsconfigPathsPlugin from "vite-tsconfig-paths";
 
 import type { PluginOption } from "vite";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 export default defineConfig(({ mode }) => ({
 	build: { sourcemap: true },
 	esbuild: { supported: { "top-level-await": true } },
 	plugins: [
 		tsconfigPathsPlugin(),
-		topLevelAwaitPlugin(),
 		solidPlugin(),
+		// @ts-expect-error import resolution
+		topLevelAwaitPlugin(),
+		// @ts-expect-error import resolution
 		wasmPlugin(),
 		checker(mode),
 	] as PluginOption[],

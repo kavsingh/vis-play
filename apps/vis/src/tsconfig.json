@@ -1,0 +1,15 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
+		"lib": ["esnext", "dom"],
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"paths": { "#*": ["./*"] },
+		"target": "esnext",
+		"sourceMap": true
+	},
+	"include": ["./**/*"]
+}
