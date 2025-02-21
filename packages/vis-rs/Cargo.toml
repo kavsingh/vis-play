@@ -1,6 +1,6 @@
 [package]
 name = "vis-rs"
-edition = "2021"
+edition = "2024"
 version = "1.0.0-dev.0"
 
 [lib]
