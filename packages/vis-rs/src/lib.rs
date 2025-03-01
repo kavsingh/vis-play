@@ -9,7 +9,7 @@ mod params;
 use async_std::task::block_on;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use crate::app::{run_app, Model};
+use crate::app::{Model, run_app};
 
 #[wasm_bindgen]
 pub async fn main_web() {

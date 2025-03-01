@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 
-use nannou::color::{white_point, Lab, Laba};
+use nannou::color::{Lab, Laba, white_point};
 use nannou::prelude::*;
 use nannou::wgpu::{Backends, DeviceDescriptor, Limits};
 
