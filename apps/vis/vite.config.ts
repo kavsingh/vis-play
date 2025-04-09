@@ -8,7 +8,8 @@ import tsconfigPathsPlugin from "vite-tsconfig-paths";
 import type { PluginOption } from "vite";
 
 export default defineConfig(({ mode }) => ({
-	build: { sourcemap: true },
+	base: "/vis-play/",
+	build: { outDir: "dist", sourcemap: true },
 	esbuild: { supported: { "top-level-await": true } },
 	plugins: [
 		tsconfigPathsPlugin(),
