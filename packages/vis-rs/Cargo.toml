@@ -7,12 +7,12 @@ version = "1.0.0-dev.0"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-async-std = { version = "1.13.0", features = ["unstable"] }
-nannou = { version = "0.19.0", features = ["wasm-experimental"] }
-wasm-bindgen = "0.2.95"
-wasm-bindgen-futures = "0.4.45"
-web-sys = { version = "0.3.72", features = ["console"] }
-wee_alloc = { version = "0.4.5", optional = true }
+async-std = { version = "1", features = ["unstable"] }
+nannou = { version = "0.19", features = ["wasm-experimental"] }
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+web-sys = { version = "0.3", features = ["console"] }
+wee_alloc = { version = "0.4", optional = true }
 
 [target."cfg(debug_assertions)".dependencies]
-console_error_panic_hook = "0.1.7"
+console_error_panic_hook = "0.1"
