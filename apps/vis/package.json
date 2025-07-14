@@ -13,8 +13,7 @@
 		"lint": "tsc && eslint .",
 		"dev": "vite",
 		"build": "rm -rf ./dist && vite build",
-		"preview": "vite preview",
-		"theme-ok": "node ./scripts/shadcn-oklch/convert.ts"
+		"preview": "vite preview"
 	},
 	"keywords": [],
 	"author": "<author>",
