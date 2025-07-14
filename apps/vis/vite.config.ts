@@ -1,9 +1,10 @@
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
-import { checker as checkerPlugin } from "vite-plugin-checker";
-import solidPlugin from "vite-plugin-solid";
-import topLevelAwaitPlugin from "vite-plugin-top-level-await";
-import wasmPlugin from "vite-plugin-wasm";
-import tsconfigPathsPlugin from "vite-tsconfig-paths";
+import { checker as checker } from "vite-plugin-checker";
+import solid from "vite-plugin-solid";
+import topLevelAwait from "vite-plugin-top-level-await";
+import wasm from "vite-plugin-wasm";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 import type { PluginOption } from "vite";
 
@@ -12,20 +13,21 @@ export default defineConfig(({ mode }) => ({
 	build: { outDir: "dist", sourcemap: true },
 	esbuild: { supported: { "top-level-await": true } },
 	plugins: [
-		tsconfigPathsPlugin(),
-		solidPlugin(),
+		tsconfigPaths(),
+		solid(),
+		tailwindcss(),
 		// @ts-expect-error import resolution
-		topLevelAwaitPlugin(),
+		topLevelAwait(),
 		// @ts-expect-error import resolution
-		wasmPlugin(),
-		checker(mode),
+		wasm(),
+		configChecker(mode),
 	] as PluginOption[],
 }));
 
-function checker(mode: string) {
+function configChecker(mode: string) {
 	if (mode !== "development") return undefined;
 
-	return checkerPlugin({
+	return checker({
 		overlay: { initialIsOpen: false },
 		typescript: true,
 	});

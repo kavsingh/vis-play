@@ -24,9 +24,12 @@
 	"files.associations": { "*.css": "tailwindcss" },
 	"tailwindCSS.validate": true,
 	"tailwindCSS.classAttributes": ["class", "classList"],
-	"tailwindCSS.experimental.classRegex": [
-		["tv\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
-	],
+	"tailwindCSS.classFunctions": ["tj", "tm", "tv"],
+	"tailwindCSS.experimental.configFile": {
+		"apps/vis/src/index.css": "apps/vis/src/**/*"
+	},
+
+	"prettier.enable": true,
 
 	"[javascript]": {
 		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
