@@ -1,7 +1,7 @@
 [package]
 name = "vis-rs"
-edition = "2024"
 version = "1.0.0-dev.0"
+edition = "2024"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

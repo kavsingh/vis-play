@@ -11,10 +11,11 @@
 	},
 
 	"editor.formatOnSave": true,
-	"editor.codeActionsOnSave": { "source.fixAll": "always" },
+	"editor.codeActionsOnSave": { "source.fixAll": "explicit" },
 	"editor.quickSuggestions": { "strings": true },
 
 	"rust-analyzer.check.command": "clippy",
+	"rust-analyzer.diagnostics.styleLints.enable": true,
 	"rust-analyzer.rustfmt.extraArgs": ["+nightly"],
 
 	"typescript.tsdk": "node_modules/typescript/lib",

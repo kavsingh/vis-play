@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 
-use nannou::color::{Lab, Laba, white_point};
+use nannou::color::{Laba, white_point};
 use nannou::prelude::*;
 use nannou::wgpu::{Backends, DeviceDescriptor, Limits};
 
@@ -38,7 +38,7 @@ pub async fn run_app(model: Model) {
 			MODEL.with(|m| {
 				let mut app_model = m.borrow_mut().take().unwrap();
 				let bounds = app.window_rect();
-				let count = if cfg!(debug_assertions) { 400 } else { 3_400 };
+				let count = if cfg!(debug_assertions) { 400 } else { 2_000 };
 
 				for id in 0..count {
 					app_model.flock.push(Boid::create(id, &bounds));
@@ -78,12 +78,16 @@ fn view(app: &App, model: &Model, frame: Frame) {
 		.color(model.bg_color);
 
 	#[cfg(debug_assertions)]
-	model.attractors.iter().for_each(|attractor| {
-		draw.ellipse()
-			.x_y(attractor.x, attractor.y)
-			.w_h(3.0, 3.0)
-			.color(Lab::new(68.0, -0.21, -48.9));
-	});
+	{
+		use nannou::color::Lab;
+
+		model.attractors.iter().for_each(|attractor| {
+			draw.ellipse()
+				.x_y(attractor.x, attractor.y)
+				.w_h(3.0, 3.0)
+				.color(Lab::new(68.0, -0.21, -48.9));
+		});
+	}
 
 	for boid in model.flock.iter() {
 		boid.draw(&draw)
