@@ -1,89 +1,96 @@
-use nannou::color::Lab;
-use nannou::prelude::*;
+use bevy::prelude::*;
+use rand::{Rng, rng};
 
 use crate::params::{Distances, Weights};
 
 const FORCE_LIMIT: f32 = 0.2;
 const VELOCITY_LIMIT: f32 = 4.0;
 
-#[derive(Clone)]
+#[derive(Component, Clone)]
 pub struct Boid {
-	id: u16,
-	position: Point2,
-	velocity: Vec2,
-	acceleration: Vec2,
-	color: Lab,
+	pub id: u16,
+	pub velocity: Vec2,
+	pub acceleration: Vec2,
+	pub color: Color,
 }
 
 impl Boid {
-	pub fn create(id: u16, bounds: &Rect) -> Boid {
-		Boid {
-			id,
-			position: pt2(
-				random_range(bounds.left(), bounds.right()),
-				random_range(bounds.bottom(), bounds.top()),
-			),
-			velocity: vec2(random_range(-1.0, 1.0), random_range(-1.0, 1.0)) * VELOCITY_LIMIT,
-			acceleration: vec2(0.0, 0.0),
-			color: Lab::new(
-				random_range(80.0, 100.0),
-				random_range(-32.0, 128.0),
-				random_range(-32.0, 128.0),
-			),
-		}
-	}
+	pub fn create(id: u16, bounds: &Rect) -> (Boid, Transform) {
+		let position = Vec2::new(
+			rng().random_range(bounds.min.x..bounds.max.x),
+			rng().random_range(bounds.min.y..bounds.max.y),
+		);
 
-	pub fn position(&self) -> Point2 {
-		self.position
+		let boid = Boid {
+			id,
+			velocity: Vec2::new(rng().random_range(-1.0..1.0), rng().random_range(-1.0..1.0))
+				* VELOCITY_LIMIT,
+			acceleration: Vec2::ZERO,
+			color: Color::srgb(
+				rng().random_range(0.3..1.0),
+				rng().random_range(0.3..1.0),
+				rng().random_range(0.3..1.0),
+			),
+		};
+
+		let transform = Transform::from_translation(position.extend(0.0));
+		(boid, transform)
 	}
 
 	pub fn update(
 		&mut self,
-		neighbors: &[&Boid],
+		transform: &mut Transform,
+		neighbors: &[(&Boid, &Transform)],
 		distances: &Distances,
 		weights: &Weights,
-		attractors: &[Point2],
+		attractors: &[Vec2],
 		bounds: &Rect,
 	) {
-		self.wrap(bounds);
+		let position = transform.translation.truncate();
+		self.wrap(transform, bounds);
 
-		let mut seek = attractors.iter().fold(vec2(0.0, 0.0), |acc, attractor| {
-			acc + (*attractor - self.position) / (attractor.distance(self.position))
+		let mut seek = attractors.iter().fold(Vec2::ZERO, |acc, attractor| {
+			let distance = attractor.distance(position);
+			if distance > 0.0 {
+				acc + (*attractor - position) / distance
+			} else {
+				acc
+			}
 		});
 
-		if attractors.len() > 1 {
+		if !attractors.is_empty() {
 			seek /= attractors.len() as f32;
 		}
 
-		let mut align = vec2(0.0, 0.0);
-		let mut cohere = vec2(0.0, 0.0);
-		let mut disperse = vec2(0.0, 0.0);
+		let mut align = Vec2::ZERO;
+		let mut cohere = Vec2::ZERO;
+		let mut disperse = Vec2::ZERO;
 		let mut cohere_count = 0.0;
 
-		for other in neighbors {
+		for (other, other_transform) in neighbors {
 			if other.id == self.id {
 				continue;
 			}
 
-			let distance = other.position.distance(self.position);
+			let other_position = other_transform.translation.truncate();
+			let distance = other_position.distance(position);
 
 			if distance < distances.align {
 				align += other.velocity;
 			}
 
 			if distance < distances.cohere {
-				cohere += other.position;
+				cohere += other_position;
 				cohere_count += 1.0;
 			}
 
-			if distance < distances.disperse {
-				disperse += (self.position - other.position)
-					/ self.position.distance_squared(other.position);
+			if distance < distances.disperse && distance > 0.0 {
+				disperse += (position - other_position) / distance.powi(2);
 			}
 		}
 
 		if cohere_count > 0.0 {
-			cohere = (cohere / cohere_count) - self.position;
+			cohere = (cohere / cohere_count) - position;
 		}
 
 		self.acceleration = (self.normalize_steering_vector(seek) * weights.seek)
@@ -92,29 +99,25 @@ impl Boid {
 			+ (self.normalize_steering_vector(disperse) * weights.disperse);
 
 		self.velocity = (self.velocity + self.acceleration).clamp_length_max(VELOCITY_LIMIT);
-		self.position += self.velocity;
+		transform.translation += self.velocity.extend(0.0);
 	}
 
-	pub fn draw(&self, draw: &Draw) {
-		draw.rect()
-			.xy(self.position)
-			.w_h(6.0, 2.0)
-			.z_radians(self.velocity.angle())
-			.color(self.color);
-	}
+	fn wrap(&mut self, transform: &mut Transform, bounds: &Rect) {
+		let mut position = transform.translation.truncate();
 
-	fn wrap(&mut self, bounds: &Rect) {
-		if self.position.x > bounds.right() {
-			self.position.x = bounds.left();
-		} else if self.position.x < bounds.left() {
-			self.position.x = bounds.right();
+		if position.x > bounds.max.x {
+			position.x = bounds.min.x;
+		} else if position.x < bounds.min.x {
+			position.x = bounds.max.x;
 		}
 
-		if self.position.y > bounds.top() {
-			self.position.y = bounds.bottom();
-		} else if self.position.y < bounds.bottom() {
-			self.position.y = bounds.top();
+		if position.y > bounds.max.y {
+			position.y = bounds.min.y;
+		} else if position.y < bounds.min.y {
+			position.y = bounds.max.y;
 		}
+
+		transform.translation = position.extend(0.0);
 	}
 
 	fn normalize_steering_vector(&self, v: Vec2) -> Vec2 {
