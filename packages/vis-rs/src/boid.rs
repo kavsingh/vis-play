@@ -33,9 +33,13 @@ impl Boid {
 		}
 	}
 
+	pub fn position(&self) -> Point2 {
+		self.position
+	}
+
 	pub fn update(
 		&mut self,
-		flock: &[Boid],
+		neighbors: &[&Boid],
 		distances: &Distances,
 		weights: &Weights,
 		attractors: &[Point2],
@@ -56,8 +60,8 @@ impl Boid {
 		let mut disperse = vec2(0.0, 0.0);
 		let mut cohere_count = 0.0;
 
-		for other in flock.iter() {
-			if other == self {
+		for other in neighbors {
+			if other.id == self.id {
 				continue;
 			}
 
