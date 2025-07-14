@@ -1,150 +1,159 @@
-use std::cell::RefCell;
-
-use nannou::color::{Laba, white_point};
-use nannou::prelude::*;
-use nannou::wgpu::{Backends, DeviceDescriptor, Limits};
+use bevy::prelude::*;
+use bevy::window::WindowResolution;
 
 use crate::boid::Boid;
 use crate::grid::SpatialGrid;
 use crate::params::{Distances, Weights};
 
-pub struct Model {
-	flock: Vec<Boid>,
-	grid: SpatialGrid,
-	distances: Distances,
-	weights: Weights,
-	attractors: Vec<Point2>,
-	bg_color: Laba<white_point::D65>,
-	show_debug: bool,
+const WINDOW_WIDTH: f32 = 1024.0;
+const WINDOW_HEIGHT: f32 = 768.0;
+
+// Resources
+#[derive(Resource)]
+pub struct FlockingParams {
+	pub distances: Distances,
+	pub weights: Weights,
 }
 
-impl Default for Model {
-	fn default() -> Self {
-		Self {
-			flock: vec![],
-			grid: SpatialGrid::new(50.0), // Cell size slightly larger than largest interaction radius
-			distances: Distances::default(),
-			weights: Weights::default(),
-			attractors: vec![],
-			bg_color: Laba::new(0.0, 0.0, 0.0, 1.0),
-			show_debug: false,
+#[derive(Resource)]
+pub struct Attractors {
+	pub positions: Vec<Vec2>,
+}
+
+#[derive(Resource)]
+pub struct WorldBounds {
+	pub rect: Rect,
+}
+
+#[derive(Resource)]
+pub struct FlockGrid {
+	pub grid: SpatialGrid,
+}
+
+#[derive(Resource)]
+pub struct DebugSettings {
+	pub show_debug: bool,
+}
+
+pub async fn run_app() {
+	let mut app = App::new();
+
+	app.add_plugins(DefaultPlugins.set(WindowPlugin {
+		primary_window: Some(Window {
+			title: "vis-rs".to_string(),
+			resolution: WindowResolution::new(WINDOW_WIDTH, WINDOW_HEIGHT),
+			canvas: Some("#vis-rs".to_string()),
+			..Default::default()
+		}),
+		..Default::default()
+	}))
+	.insert_resource(FlockingParams {
+		distances: Distances::default(),
+		weights: Weights::default(),
+	})
+	.insert_resource(Attractors {
+		positions: Vec::new(),
+	})
+	.insert_resource(WorldBounds {
+		rect: Rect::new(
+			-WINDOW_WIDTH / 2.0,
+			-WINDOW_HEIGHT / 2.0,
+			WINDOW_WIDTH / 2.0,
+			WINDOW_HEIGHT / 2.0,
+		),
+	})
+	.insert_resource(FlockGrid {
+		grid: SpatialGrid::new(50.0),
+	})
+	.insert_resource(DebugSettings { show_debug: false })
+	.insert_resource(ClearColor(Color::BLACK))
+	.add_systems(Startup, setup_system)
+	.add_systems(
+		Update,
+		(update_spatial_grid, update_boids, handle_input).chain(),
+	)
+	.add_systems(PostUpdate, render_boids);
+
+	app.run();
+}
+
+fn setup_system(mut commands: Commands, bounds: Res<WorldBounds>) {
+	// Spawn camera
+	commands.spawn(Camera2d);
+
+	// Spawn boids
+	let count = if cfg!(debug_assertions) { 400 } else { 2000 };
+
+	for id in 0..count {
+		let (boid, transform) = Boid::create(id, &bounds.rect);
+		commands.spawn((
+			boid,
+			transform,
+			Sprite {
+				color: Color::WHITE,
+				custom_size: Some(Vec2::new(6.0, 2.0)),
+				..Default::default()
+			},
+		));
+	}
+}
+
+fn update_spatial_grid(mut grid: ResMut<FlockGrid>, query: Query<(&Boid, &Transform)>) {
+	grid.grid.clear();
+
+	for (boid, transform) in query.iter() {
+		grid.grid.insert(boid.clone(), *transform);
+	}
+}
+
+fn update_boids(
+	mut query: Query<(&mut Boid, &mut Transform)>,
+	grid: Res<FlockGrid>,
+	params: Res<FlockingParams>,
+	attractors: Res<Attractors>,
+	bounds: Res<WorldBounds>,
+) {
+	let max_radius = params
+		.distances
+		.cohere
+		.max(params.distances.align)
+		.max(params.distances.disperse);
+
+	// Collect all boids for neighbor lookup
+	let mut boids_to_update = Vec::new();
+	for (boid, transform) in query.iter() {
+		let position = transform.translation.truncate();
+		let neighbors = grid.grid.get_neighbors(position, max_radius);
+		boids_to_update.push((boid.clone(), *transform, neighbors));
+	}
+
+	// Update boids
+	for (mut boid, mut transform) in query.iter_mut() {
+		if let Some((_, _, neighbors)) = boids_to_update.iter().find(|(b, _, _)| b.id == boid.id) {
+			boid.update(
+				&mut transform,
+				neighbors,
+				&params.distances,
+				&params.weights,
+				&attractors.positions,
+				&bounds.rect,
+			);
 		}
 	}
 }
 
-pub async fn run_app(model: Model) {
-	thread_local!(static MODEL: RefCell<Option<Model>> = Default::default());
+fn render_boids(mut query: Query<(&Boid, &Transform, &mut Sprite)>) {
+	for (boid, _transform, mut sprite) in query.iter_mut() {
+		sprite.color = boid.color;
+		sprite.custom_size = Some(Vec2::new(6.0, 2.0));
 
-	MODEL.with(|m| m.borrow_mut().replace(model));
-
-	app::Builder::new_async(|app| {
-		Box::new(async move {
-			create_window(app).await;
-			MODEL.with(|m| {
-				let mut app_model = m.borrow_mut().take().unwrap();
-				let bounds = app.window_rect();
-				let count = if cfg!(debug_assertions) { 400 } else { 4_000 };
-
-				for id in 0..count {
-					app_model.flock.push(Boid::create(id, &bounds));
-				}
-
-				app_model
-			})
-		})
-	})
-	.backends(Backends::PRIMARY | Backends::GL)
-	.update(update)
-	.event(event)
-	.run_async()
-	.await;
-}
-
-fn update(app: &App, model: &mut Model, _update: Update) {
-	let bounds = app.window_rect();
-
-	// Update spatial grid
-	model.grid.clear();
-	for boid in model.flock.iter().cloned() {
-		model.grid.insert(boid);
-	}
-
-	// Update each boid using nearby neighbors
-	let max_radius = model
-		.distances
-		.cohere
-		.max(model.distances.align)
-		.max(model.distances.disperse);
-
-	for boid in model.flock.iter_mut() {
-		let neighbors = model.grid.get_neighbors(boid.position(), max_radius);
-		boid.update(
-			&neighbors,
-			&model.distances,
-			&model.weights,
-			&model.attractors,
-			&bounds,
-		);
+		// Note: In a full implementation, we'd set rotation on the Transform
+		// based on velocity direction for proper boid orientation
 	}
 }
 
-fn view(app: &App, model: &Model, frame: Frame) {
-	let draw = app.draw();
-	let bounds = app.window_rect();
-
-	// Draw background
-	draw.rect()
-		.xy(frame.rect().xy())
-		.wh(frame.rect().wh())
-		.color(model.bg_color);
-
-	// Draw grid debug visualization if enabled
-	if model.show_debug {
-		model.grid.draw_debug(&draw, &bounds);
-	}
-
-	#[cfg(debug_assertions)]
-	{
-		use nannou::color::Lab;
-
-		model.attractors.iter().for_each(|attractor| {
-			draw.ellipse()
-				.x_y(attractor.x, attractor.y)
-				.w_h(3.0, 3.0)
-				.color(Lab::new(68.0, -0.21, -48.9));
-		});
-	}
-
-	// Draw boids on top
-	for boid in model.flock.iter() {
-		boid.draw(&draw)
-	}
-
-	draw.to_frame(app, &frame).unwrap();
-}
-
-async fn create_window(app: &App) {
-	app.new_window()
-		.device_descriptor(DeviceDescriptor {
-			limits: Limits {
-				max_texture_dimension_2d: 8192,
-				..Limits::downlevel_webgl2_defaults()
-			},
-			..Default::default()
-		})
-		.title("vis-rs")
-		.view(view)
-		.build_async()
-		.await
-		.unwrap();
-}
-
-fn event(_app: &App, model: &mut Model, event: Event) {
-	if let Event::WindowEvent {
-		id: _,
-		simple: Some(WindowEvent::KeyPressed(Key::D)),
-	} = event
-	{
-		model.show_debug = !model.show_debug;
+fn handle_input(keys: Res<ButtonInput<KeyCode>>, mut debug: ResMut<DebugSettings>) {
+	if keys.just_pressed(KeyCode::KeyD) {
+		debug.show_debug = !debug.show_debug;
 	}
 }

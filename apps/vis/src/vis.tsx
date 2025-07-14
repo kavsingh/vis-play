@@ -1,36 +1,43 @@
 import { onMount } from "solid-js";
 
+import { scopedLogger } from "#logger";
+
+const logger = scopedLogger("<Vis />");
+
 export default function Vis() {
-	let containerEl: HTMLDivElement | null = null;
-
-	async function startAndContain() {
-		if (!containerEl) return;
-
-		await startVis();
-
-		const nannouEl = document.querySelector("[alt='vis-rs']");
-
-		if (!(nannouEl instanceof HTMLCanvasElement)) {
-			throw new Error("expected a canvas element with alt=vis-rs");
-		}
-
-		containerEl.appendChild(nannouEl);
-	}
-
 	onMount(() => {
-		void startAndContain();
+		void startVis();
 	});
 
 	return (
-		<div
-			class="grid size-full place-items-center bg-black"
-			ref={(el) => (containerEl = el)}
-		/>
+		<div class="grid size-full place-items-center bg-black">
+			<canvas
+				id="vis-rs"
+				width={1024}
+				height={768}
+				class="focus:outline-none"
+			/>
+		</div>
 	);
 }
 
 async function startVis() {
-	const { main_web: main } = await import("vis-rs");
+	const { main_web: vis } = await import("vis-rs");
 
-	await main();
+	try {
+		await vis();
+	} catch (cause: unknown) {
+		const error =
+			cause instanceof Error ? cause : new Error("init error", { cause });
+
+		if (
+			error.message.startsWith(
+				"Using exceptions for control flow, don't mind me. This isn't actually an error!",
+			)
+		) {
+			logger.debug(error);
+		} else {
+			throw error;
+		}
+	}
 }
