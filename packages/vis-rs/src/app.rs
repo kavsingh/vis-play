@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use bevy::prelude::*;
 use bevy::window::WindowResolution;
 use rand::{Rng, rng};
@@ -82,7 +84,7 @@ fn setup_system(mut commands: Commands, bounds: Res<WorldBounds>) {
 	commands.spawn(Camera2d);
 
 	// Spawn boids
-	let count = if cfg!(debug_assertions) { 400 } else { 4_000 };
+	let count = if cfg!(debug_assertions) { 400 } else { 6_000 };
 
 	for id in 0..count {
 		commands.spawn((
@@ -123,15 +125,14 @@ fn update_boids(
 		.max(params.distances.disperse);
 
 	// Collect all boids for neighbor lookup
-	let mut boids_to_update = Vec::new();
+	let mut boids_to_update = HashMap::new();
 	for (boid, _) in query.iter() {
-		let neighbors = grid.grid.get_neighbors(boid.position, max_radius);
-		boids_to_update.push((boid.clone(), neighbors));
+		boids_to_update.insert(boid.id, grid.grid.get_neighbors(boid.position, max_radius));
 	}
 
 	// Update boids
 	for (mut boid, mut transform) in query.iter_mut() {
-		if let Some((_, neighbors)) = boids_to_update.iter().find(|(b, _)| b.id == boid.id) {
+		if let Some(neighbors) = boids_to_update.get(&boid.id) {
 			boid.update(
 				neighbors,
 				&params.distances,
