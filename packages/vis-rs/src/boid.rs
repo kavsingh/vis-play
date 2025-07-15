@@ -30,7 +30,7 @@ impl Boid {
 
 	pub fn update(
 		&mut self,
-		neighbors: &[&Boid],
+		neighbors: &[(&Boid, f32)],
 		distances: &Distances,
 		weights: &Weights,
 		attractors: &[Vec2],
@@ -56,13 +56,13 @@ impl Boid {
 		let mut disperse = Vec2::ZERO;
 		let mut cohere_count = 0.0;
 
-		for other in neighbors {
+		for (other, other_distance) in neighbors {
 			if other.id == self.id {
 				continue;
 			}
 
 			let other_position = other.position;
-			let distance = other_position.distance(self.position);
+			let distance = *other_distance;
 
 			if distance < distances.align {
 				align += other.velocity;
