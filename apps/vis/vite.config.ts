@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => ({
 	base: "/vis-play/",
 	build: { outDir: "dist", sourcemap: true },
 	esbuild: { supported: { "top-level-await": true } },
+	worker: { format: "es" },
 	plugins: [
 		tsconfigPaths(),
 		solid(),
@@ -22,6 +23,18 @@ export default defineConfig(({ mode }) => ({
 		wasm(),
 		configChecker(mode),
 	] as PluginOption[],
+	server: {
+		headers: {
+			"Cross-Origin-Opener-Policy": "same-origin",
+			"Cross-Origin-Embedder-Policy": "require-corp",
+		},
+	},
+	preview: {
+		headers: {
+			"Cross-Origin-Opener-Policy": "same-origin",
+			"Cross-Origin-Embedder-Policy": "require-corp",
+		},
+	},
 }));
 
 function configChecker(mode: string) {

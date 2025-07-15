@@ -9,9 +9,10 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 getrandom = { version = "0.3", features = ["wasm_js"] }
 rand = "0.9"
+rayon = "1"
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
-web-sys = { version = "0.3", features = ["console"] }
+wasm-bindgen-rayon = "1"
 wee_alloc = { version = "0.4", optional = true }
 
 [dependencies.bevy]

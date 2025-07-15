@@ -8,13 +8,12 @@ mod grid;
 mod params;
 
 use wasm_bindgen::prelude::*;
-
-use crate::app::run_app;
+pub use wasm_bindgen_rayon::init_thread_pool;
 
 #[wasm_bindgen]
-pub async fn main_web() {
+pub async fn vis() {
 	#[cfg(debug_assertions)]
 	console_error_panic_hook::set_once();
 
-	run_app().await;
+	crate::app::run_app().await;
 }
