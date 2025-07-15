@@ -1,5 +1,4 @@
 import { onMount } from "solid-js";
-import init, { vis, initThreadPool } from "vis-rs";
 
 import { scopedLogger } from "#logger";
 
@@ -23,22 +22,21 @@ export default function Vis() {
 }
 
 async function startVis() {
+	const { default: init, initThreadPool, vis } = await import("vis-rs");
+
 	try {
 		await init();
 		await initThreadPool(navigator.hardwareConcurrency);
 		await vis();
 	} catch (cause: unknown) {
 		const error =
-			cause instanceof Error ? cause : new Error("init error", { cause });
+			cause instanceof Error ? cause : new Error("startVis error", { cause });
+		const isDeliberate =
+			/Using exceptions for control flow, don't mind me. This isn't actually an error!/i.test(
+				error.message,
+			);
 
-		if (
-			error.message.startsWith(
-				"Using exceptions for control flow, don't mind me. This isn't actually an error!",
-			)
-		) {
-			logger.debug(error);
-		} else {
-			throw error;
-		}
+		if (isDeliberate) logger.debug(error);
+		else throw error;
 	}
 }
