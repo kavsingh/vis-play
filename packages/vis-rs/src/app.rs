@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use bevy::prelude::*;
 use bevy::window::WindowResolution;
 use rand::{Rng, rng};
@@ -124,27 +122,21 @@ fn update_boids(
 		.max(params.distances.align)
 		.max(params.distances.disperse);
 
-	// Collect all boids for neighbor lookup
-	let mut boids_to_update = HashMap::new();
-	for (boid, _) in query.iter() {
-		boids_to_update.insert(boid.id, grid.grid.get_neighbors(boid.position, max_radius));
-	}
-
 	// Update boids
-	for (mut boid, mut transform) in query.iter_mut() {
-		if let Some(neighbors) = boids_to_update.get(&boid.id) {
-			boid.update(
-				neighbors,
-				&params.distances,
-				&params.weights,
-				&attractors.positions,
-				&bounds.rect,
-			);
+	query.par_iter_mut().for_each(|(mut boid, mut transform)| {
+		let neighbors = grid.grid.get_neighbors(boid.position, max_radius);
 
-			transform.translation = boid.position.extend(0.0);
-			transform.rotation = Quat::from_rotation_z(boid.velocity.y.atan2(boid.velocity.x));
-		}
-	}
+		boid.update(
+			&neighbors,
+			&params.distances,
+			&params.weights,
+			&attractors.positions,
+			&bounds.rect,
+		);
+
+		transform.translation = boid.position.extend(0.0);
+		transform.rotation = Quat::from_rotation_z(boid.velocity.y.atan2(boid.velocity.x));
+	});
 }
 
 fn handle_input(keys: Res<ButtonInput<KeyCode>>, mut debug: ResMut<DebugSettings>) {
