@@ -1,4 +1,5 @@
 import { onMount } from "solid-js";
+import init, { vis, initThreadPool } from "vis-rs";
 
 import { scopedLogger } from "#logger";
 
@@ -22,9 +23,9 @@ export default function Vis() {
 }
 
 async function startVis() {
-	const { main_web: vis } = await import("vis-rs");
-
 	try {
+		await init();
+		await initThreadPool(navigator.hardwareConcurrency);
 		await vis();
 	} catch (cause: unknown) {
 		const error =

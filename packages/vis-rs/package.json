@@ -16,8 +16,8 @@
 		"./pkg/snippets/*"
 	],
 	"scripts": {
-		"dev": "cargo watch -i .gitignore -i \"pkg/*\" -s \"wasm-pack build --dev\"",
-		"build": "wasm-pack build ."
+		"dev": "cargo watch -i .gitignore -i \"pkg/*\" -s \"wasm-pack build --dev --target web\"",
+		"build": "wasm-pack build --target web"
 	},
 	"devDependencies": {
 		"wasm-pack": "0.13.1"
