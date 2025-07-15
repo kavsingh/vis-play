@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy::window::WindowResolution;
+use rand::{Rng, rng};
 
 use crate::boid::Boid;
 use crate::grid::SpatialGrid;
@@ -71,8 +72,7 @@ pub async fn run_app() {
 	.add_systems(
 		Update,
 		(update_spatial_grid, update_boids, handle_input).chain(),
-	)
-	.add_systems(PostUpdate, render_boids);
+	);
 
 	app.run();
 }
@@ -82,15 +82,18 @@ fn setup_system(mut commands: Commands, bounds: Res<WorldBounds>) {
 	commands.spawn(Camera2d);
 
 	// Spawn boids
-	let count = if cfg!(debug_assertions) { 400 } else { 2000 };
+	let count = if cfg!(debug_assertions) { 400 } else { 4_000 };
 
 	for id in 0..count {
-		let (boid, transform) = Boid::create(id, &bounds.rect);
 		commands.spawn((
-			boid,
-			transform,
+			Boid::create(id, &bounds.rect),
+			Transform::default(),
 			Sprite {
-				color: Color::WHITE,
+				color: Color::oklch(
+					rng().random_range(0.8..1.0),
+					rng().random_range(0.0..1.0),
+					rng().random_range(0.0..1.0),
+				),
 				custom_size: Some(Vec2::new(6.0, 2.0)),
 				..Default::default()
 			},
@@ -98,11 +101,11 @@ fn setup_system(mut commands: Commands, bounds: Res<WorldBounds>) {
 	}
 }
 
-fn update_spatial_grid(mut grid: ResMut<FlockGrid>, query: Query<(&Boid, &Transform)>) {
+fn update_spatial_grid(mut grid: ResMut<FlockGrid>, query: Query<&Boid>) {
 	grid.grid.clear();
 
-	for (boid, transform) in query.iter() {
-		grid.grid.insert(boid.clone(), *transform);
+	for boid in query.iter() {
+		grid.grid.insert(boid);
 	}
 }
 
@@ -121,34 +124,25 @@ fn update_boids(
 
 	// Collect all boids for neighbor lookup
 	let mut boids_to_update = Vec::new();
-	for (boid, transform) in query.iter() {
-		let position = transform.translation.truncate();
-		let neighbors = grid.grid.get_neighbors(position, max_radius);
-		boids_to_update.push((boid.clone(), *transform, neighbors));
+	for (boid, _) in query.iter() {
+		let neighbors = grid.grid.get_neighbors(boid.position, max_radius);
+		boids_to_update.push((boid.clone(), neighbors));
 	}
 
 	// Update boids
 	for (mut boid, mut transform) in query.iter_mut() {
-		if let Some((_, _, neighbors)) = boids_to_update.iter().find(|(b, _, _)| b.id == boid.id) {
+		if let Some((_, neighbors)) = boids_to_update.iter().find(|(b, _)| b.id == boid.id) {
 			boid.update(
-				&mut transform,
 				neighbors,
 				&params.distances,
 				&params.weights,
 				&attractors.positions,
 				&bounds.rect,
 			);
+
+			transform.translation = boid.position.extend(0.0);
+			transform.rotation = Quat::from_rotation_z(boid.velocity.y.atan2(boid.velocity.x));
 		}
-	}
-}
-
-fn render_boids(mut query: Query<(&Boid, &Transform, &mut Sprite)>) {
-	for (boid, _transform, mut sprite) in query.iter_mut() {
-		sprite.color = boid.color;
-		sprite.custom_size = Some(Vec2::new(6.0, 2.0));
-
-		// Note: In a full implementation, we'd set rotation on the Transform
-		// based on velocity direction for proper boid orientation
 	}
 }
 

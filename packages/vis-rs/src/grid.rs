@@ -6,7 +6,7 @@ use crate::boid::Boid;
 
 pub struct SpatialGrid {
 	cell_size: f32,
-	cells: HashMap<(i32, i32), Vec<(Boid, Transform)>>,
+	cells: HashMap<(i32, i32), Vec<Boid>>,
 }
 
 impl SpatialGrid {
@@ -21,12 +21,12 @@ impl SpatialGrid {
 		self.cells.clear();
 	}
 
-	pub fn insert(&mut self, boid: Boid, transform: Transform) {
-		let cell = self.get_cell_index(transform.translation.truncate());
-		self.cells.entry(cell).or_default().push((boid, transform));
+	pub fn insert(&mut self, boid: &Boid) {
+		let cell = self.get_cell_index(boid.position);
+		self.cells.entry(cell).or_default().push(boid.clone());
 	}
 
-	pub fn get_neighbors(&self, position: Vec2, radius: f32) -> Vec<(&Boid, &Transform)> {
+	pub fn get_neighbors(&self, position: Vec2, radius: f32) -> Vec<&Boid> {
 		let mut neighbors = Vec::new();
 		let cell_radius = (radius / self.cell_size).ceil() as i32;
 		let center_cell = self.get_cell_index(position);
@@ -35,9 +35,9 @@ impl SpatialGrid {
 			for dy in -cell_radius..=cell_radius {
 				let cell = (center_cell.0 + dx, center_cell.1 + dy);
 				if let Some(boids) = self.cells.get(&cell) {
-					for (boid, transform) in boids {
-						if position.distance(transform.translation.truncate()) <= radius {
-							neighbors.push((boid, transform));
+					for boid in boids {
+						if position.distance(boid.position) <= radius {
+							neighbors.push(boid);
 						}
 					}
 				}
