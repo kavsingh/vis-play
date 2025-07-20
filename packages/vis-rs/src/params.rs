@@ -2,14 +2,20 @@ pub struct Distances {
 	pub align: f32,
 	pub cohere: f32,
 	pub disperse: f32,
+	pub max: f32,
 }
 
 impl Default for Distances {
 	fn default() -> Self {
+		let align = 25.0;
+		let cohere = 50.0;
+		let disperse = 25.0;
+
 		Self {
-			align: 25.0,
-			cohere: 50.0,
-			disperse: 25.0,
+			align,
+			cohere,
+			disperse,
+			max: cohere.max(align.max(disperse)),
 		}
 	}
 }
