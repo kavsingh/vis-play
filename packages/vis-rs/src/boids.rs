@@ -88,7 +88,7 @@ pub fn run() {
 fn setup(world: Res<World>, mut commands: Commands) {
 	commands.spawn(Camera2d);
 
-	let count = if cfg!(debug_assertions) { 300 } else { 4_000 };
+	let count = if cfg!(debug_assertions) { 400 } else { 4_000 };
 
 	for _ in 0..count {
 		let position = Vec2 {
