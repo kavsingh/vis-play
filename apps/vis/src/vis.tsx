@@ -22,20 +22,17 @@ export default function Vis() {
 }
 
 async function startVis() {
-	const { default: init, vis } = await import("vis-rs");
+	const { vis } = await import("vis-rs");
+
+	logger.info("starting vis");
 
 	try {
-		await init();
 		vis();
-	} catch (cause: unknown) {
-		const error =
-			cause instanceof Error ? cause : new Error("startVis error", { cause });
-		const isDeliberate =
-			/Using exceptions for control flow, don't mind me. This isn't actually an error!/i.test(
-				error.message,
-			);
-
-		if (isDeliberate) logger.debug(error);
-		else throw error;
+	} catch (cause) {
+		if (/isn't actually an error/i.test(String(cause))) {
+			logger.debug(cause);
+		} else {
+			logger.error("failed to start", cause);
+		}
 	}
 }
