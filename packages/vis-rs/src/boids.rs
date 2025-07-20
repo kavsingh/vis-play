@@ -51,7 +51,7 @@ struct World {
 
 pub fn run() {
 	let distances = params::Distances::default();
-	let max_distance = distances.max;
+	let cell_size = distances.mean();
 
 	App::new()
 		.add_plugins(DefaultPlugins.set(WindowPlugin {
@@ -72,7 +72,7 @@ pub fn run() {
 			positions: Vec::new(),
 		})
 		.insert_resource(World {
-			grid: SpatialGrid::new(max_distance),
+			grid: SpatialGrid::new(cell_size),
 			bounds: Rect::new(
 				-WINDOW_WIDTH / 2.0,
 				-WINDOW_HEIGHT / 2.0,
@@ -129,7 +129,7 @@ fn update_world(
 	mut world: ResMut<World>,
 	query: Query<(Entity, &Boid, &Movement)>,
 ) {
-	world.grid.reset(Some(params.distances.max));
+	world.grid.reset(Some(params.distances.mean()));
 
 	for (entity, _, movement) in query.iter() {
 		world.grid.insert(entity, *movement);
@@ -168,7 +168,7 @@ fn update_boids(
 
 		let neighbors = world
 			.grid
-			.get_neighbors(&movement.position, params.distances.max);
+			.get_neighbors(&movement.position, params.distances.max());
 
 		for (other, other_movement, distance) in neighbors {
 			if other == entity {
