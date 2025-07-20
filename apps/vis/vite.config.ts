@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => ({
 	base: "/vis-play/",
 	build: { outDir: "dist", sourcemap: true },
 	esbuild: { supported: { "top-level-await": true } },
+	worker: { format: "es" },
 	plugins: [
 		tsconfigPaths(),
 		solid(),

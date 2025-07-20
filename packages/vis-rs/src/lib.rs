@@ -2,23 +2,16 @@
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-mod app;
-mod boid;
+mod boids;
 mod params;
+mod spatial_grid;
 
-use async_std::task::block_on;
-use wasm_bindgen::prelude::wasm_bindgen;
-
-use crate::app::{Model, run_app};
+use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub async fn main_web() {
+pub fn vis() {
 	#[cfg(debug_assertions)]
 	console_error_panic_hook::set_once();
 
-	let model = Model::default();
-
-	block_on(async {
-		run_app(model).await;
-	});
+	crate::boids::run();
 }

@@ -7,12 +7,25 @@ edition = "2024"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-async-std = { version = "1", features = ["unstable"] }
-nannou = { version = "0.19", features = ["wasm-experimental"] }
+getrandom = { version = "0.3", features = ["wasm_js"] }
+rand = "0.9"
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
-web-sys = { version = "0.3", features = ["console"] }
 wee_alloc = { version = "0.4", optional = true }
+
+[dependencies.bevy]
+version = "0.16"
+default-features = false
+features = [
+    "bevy_asset",
+    "bevy_core_pipeline",
+    "bevy_render",
+    "bevy_sprite",
+    "bevy_ui",
+    "bevy_winit",
+    "bevy_state",
+    "webgpu",
+]
 
 [target."cfg(debug_assertions)".dependencies]
 console_error_panic_hook = "0.1"
