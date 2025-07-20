@@ -52,6 +52,21 @@ export default tsEslint.config(
 		extends: [solid.configs["flat/recommended"]],
 		rules: {
 			"no-console": "error",
+			"@typescript-eslint/no-restricted-imports": [
+				"error",
+				{
+					paths: [
+						{
+							name: "tailwind-merge",
+							message: "please import helpers from #src/style",
+						},
+						{
+							name: "tailwind-variants",
+							message: "please import helpers from #src/style",
+						},
+					],
+				},
+			],
 		},
 	},
 
