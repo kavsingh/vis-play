@@ -23,18 +23,6 @@ export default defineConfig(({ mode }) => ({
 		wasm(),
 		configChecker(mode),
 	] as PluginOption[],
-	server: {
-		headers: {
-			"Cross-Origin-Opener-Policy": "same-origin",
-			"Cross-Origin-Embedder-Policy": "require-corp",
-		},
-	},
-	preview: {
-		headers: {
-			"Cross-Origin-Opener-Policy": "same-origin",
-			"Cross-Origin-Embedder-Policy": "require-corp",
-		},
-	},
 }));
 
 function configChecker(mode: string) {
