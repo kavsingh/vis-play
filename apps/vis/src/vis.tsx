@@ -22,12 +22,11 @@ export default function Vis() {
 }
 
 async function startVis() {
-	const { default: init, initThreadPool, vis } = await import("vis-rs");
+	const { default: init, vis } = await import("vis-rs");
 
 	try {
 		await init();
-		await initThreadPool(navigator.hardwareConcurrency);
-		await vis();
+		vis();
 	} catch (cause: unknown) {
 		const error =
 			cause instanceof Error ? cause : new Error("startVis error", { cause });
