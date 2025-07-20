@@ -16,6 +16,7 @@
 		"node": ">=23"
 	},
 	"scripts": {
+		"postinstall": "turbo telemetry disable",
 		"dev": "turbo dev",
 		"build": "turbo build",
 		"test": "turbo test",
