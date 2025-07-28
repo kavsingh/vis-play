@@ -9,9 +9,9 @@ mod spatial_grid;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub fn vis() {
+pub fn vis(count: i32) {
 	#[cfg(debug_assertions)]
 	console_error_panic_hook::set_once();
 
-	crate::boids::run();
+	crate::boids::run(count);
 }

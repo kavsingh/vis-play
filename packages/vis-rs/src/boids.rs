@@ -2,14 +2,11 @@ use bevy::DefaultPlugins;
 use bevy::app::{App, Startup};
 use bevy::math::Rect;
 use bevy::prelude::*;
-use bevy::window::WindowResolution;
 use rand::{Rng, rng};
 
 use crate::params;
 use crate::spatial_grid::SpatialGrid;
 
-static WINDOW_WIDTH: f32 = 1024.0;
-static WINDOW_HEIGHT: f32 = 768.0;
 static FORCE_LIMIT: f32 = 0.2;
 static VELOCITY_LIMIT: f32 = 4.0;
 
@@ -47,9 +44,10 @@ struct Attractors {
 struct World {
 	grid: SpatialGrid,
 	bounds: Rect,
+	count: i32,
 }
 
-pub fn run() {
+pub fn run(count: i32) {
 	let distances = params::Distances::default();
 	let cell_size = distances.mean();
 
@@ -57,8 +55,8 @@ pub fn run() {
 		.add_plugins(DefaultPlugins.set(WindowPlugin {
 			primary_window: Some(Window {
 				title: "vis-rs".to_string(),
-				resolution: WindowResolution::new(WINDOW_WIDTH, WINDOW_HEIGHT),
 				canvas: Some("canvas#vis-rs".to_string()),
+				resizable: true,
 				..Default::default()
 			}),
 			..Default::default()
@@ -72,28 +70,24 @@ pub fn run() {
 			positions: Vec::new(),
 		})
 		.insert_resource(World {
+			count,
 			grid: SpatialGrid::new(cell_size),
-			bounds: Rect::new(
-				-WINDOW_WIDTH / 2.0,
-				-WINDOW_HEIGHT / 2.0,
-				WINDOW_WIDTH / 2.0,
-				WINDOW_HEIGHT / 2.0,
-			),
+			bounds: Rect::new(0.0, 0.0, 0.0, 0.0),
 		})
 		.add_systems(Startup, setup)
 		.add_systems(Update, (update_world, update_boids).chain())
 		.run();
 }
 
-fn setup(world: Res<World>, mut commands: Commands) {
+fn setup(mut commands: Commands, world: Res<World>, window: Single<&Window>) {
 	commands.spawn(Camera2d);
 
-	let count = if cfg!(debug_assertions) { 400 } else { 4_000 };
+	let (width, height) = (window.resolution.width(), window.resolution.height());
 
-	for _ in 0..count {
+	for _ in 0..world.count {
 		let position = Vec2 {
-			x: rng().random_range(world.bounds.min.x..world.bounds.max.x),
-			y: rng().random_range(world.bounds.min.y..world.bounds.max.y),
+			x: rng().random_range(-width / 2.0..width / 2.0),
+			y: rng().random_range(-height / 2.0..height / 2.0),
 		};
 		let velocity = Vec2 {
 			x: rng().random_range(-1.0..1.0),
@@ -127,8 +121,12 @@ fn setup(world: Res<World>, mut commands: Commands) {
 fn update_world(
 	params: Res<FlockingParams>,
 	mut world: ResMut<World>,
+	window: Single<&Window>,
 	query: Query<(Entity, &Boid, &Movement)>,
 ) {
+	let (width, height) = (window.resolution.width(), window.resolution.height());
+
+	world.bounds = Rect::new(-width / 2.0, -height / 2.0, width / 2.0, height / 2.0);
 	world.grid.reset(Some(params.distances.mean()));
 
 	for (entity, _, movement) in query.iter() {
