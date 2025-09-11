@@ -12,6 +12,7 @@ export default mergeConfig(
 			setupFiles: ["./src/vitest.setup.ts"],
 			clearMocks: true,
 			coverage: {
+				reportsDirectory: "./reports/coverage",
 				include: [
 					"src",
 					"!**/__generated__",

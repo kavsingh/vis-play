@@ -1,11 +1,12 @@
 import js from "@eslint/js";
 import filenames from "@kavsingh/eslint-plugin-filenames";
-import importX from "eslint-plugin-import-x";
-import prettierRecommended from "eslint-plugin-prettier/recommended";
+import { defineConfig } from "eslint/config";
+import { flatConfigs as importX } from "eslint-plugin-import-x";
+import prettier from "eslint-config-prettier/flat";
 import globals from "globals";
-import * as tsEslint from "typescript-eslint";
+import tsEslint from "typescript-eslint";
 
-export default tsEslint.config(
+export default defineConfig(
 	{
 		ignores: [
 			".vscode/*",
@@ -29,8 +30,9 @@ export default tsEslint.config(
 	js.configs.recommended,
 	...tsEslint.configs.strictTypeChecked,
 	...tsEslint.configs.stylisticTypeChecked,
-	importX.flatConfigs.recommended,
-	importX.flatConfigs.typescript,
+	// @ts-expect-error upstream types
+	importX.recommended,
+	importX.typescript,
 	filenames.configs.kebab,
 
 	{
@@ -114,12 +116,11 @@ export default tsEslint.config(
 		},
 	},
 
-	prettierRecommended,
+	prettier,
 
 	{
 		rules: {
 			"curly": ["warn", "multi-line", "consistent"],
-			"prettier/prettier": "warn",
 		},
 	},
 );

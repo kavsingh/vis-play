@@ -1,19 +1,21 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import vitest from "@vitest/eslint-plugin";
+import { defineConfig } from "eslint/config";
+import tailwindcss from "eslint-plugin-better-tailwindcss";
+import { getDefaultCallees } from "eslint-plugin-better-tailwindcss/api/defaults";
 import jestDom from "eslint-plugin-jest-dom";
 import solid from "eslint-plugin-solid";
 import testingLibrary from "eslint-plugin-testing-library";
-import vitest from "eslint-plugin-vitest";
 import globals from "globals";
-import * as tsEslint from "typescript-eslint";
 
 import baseConfig from "../../eslint.config.js";
 import { testFilePatterns, testFileSuffixes } from "../../eslint.helpers.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export default tsEslint.config(
+export default defineConfig(
 	...baseConfig,
 
 	{
@@ -48,8 +50,16 @@ export default tsEslint.config(
 					project: path.resolve(dirname, "src/tsconfig.json"),
 				},
 			},
+			"better-tailwindcss": {
+				entryPoint: "src/index.css",
+				callees: [...getDefaultCallees(), "tj", "tm"],
+			},
 		},
-		extends: [solid.configs["flat/recommended"]],
+		extends: [
+			// @ts-expect-error upstream types
+			solid.configs["flat/recommended"],
+		],
+		plugins: { "better-tailwindcss": tailwindcss },
 		rules: {
 			"no-console": "error",
 			"@typescript-eslint/no-restricted-imports": [
@@ -67,6 +77,14 @@ export default tsEslint.config(
 					],
 				},
 			],
+			...tailwindcss.configs["recommended"]?.rules,
+			"better-tailwindcss/enforce-consistent-class-order": [
+				"warn",
+				{ order: "official" },
+			],
+			"better-tailwindcss/enforce-consistent-line-wrapping": "off",
+			"better-tailwindcss/enforce-shorthand-classes": "warn",
+			"better-tailwindcss/no-conflicting-classes": "error",
 		},
 	},
 
@@ -106,7 +124,10 @@ export default tsEslint.config(
 			jestDom.configs["flat/recommended"],
 		],
 		rules: {
+			"vitest/no-disabled-tests": "error",
+			"vitest/no-focused-tests": "error",
 			"vitest/no-hooks": "off",
+			"vitest/require-mock-type-parameters": "off",
 		},
 	},
 );
