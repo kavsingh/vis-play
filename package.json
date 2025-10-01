@@ -11,37 +11,36 @@
 	"license": "MIT",
 	"private": true,
 	"type": "module",
-	"packageManager": "pnpm@10.15.1+sha512.34e538c329b5553014ca8e8f4535997f96180a1d0f614339357449935350d924e22f8614682191264ec33d1462ac21561aff97f6bb18065351c162c7e8f6de67",
+	"packageManager": "pnpm@10.17.1+sha512.17c560fca4867ae9473a3899ad84a88334914f379be46d455cbf92e5cf4b39d34985d452d2583baf19967fa76cb5c17bc9e245529d0b98745721aa7200ecaf7a",
 	"engines": {
 		"node": ">=24"
 	},
 	"scripts": {
-		"postinstall": "turbo telemetry disable",
-		"dev": "turbo dev",
-		"build": "turbo build",
-		"test": "turbo test",
-		"lint": "turbo lint",
-		"preview": "turbo preview",
-		"clean:turbo": "rm -rf .turbo && pnpm -r exec rm -rf .turbo",
+		"dev": "nx run-many -t dev",
+		"build": "nx build vis",
+		"test": "nx run-many -t test",
+		"lint": "nx run-many -t lint",
+		"preview": "nx run-many -t preview",
+		"clean:nx": "rm -rf .nx && pnpm -r exec rm -rf .nx",
 		"clean:modules": "rm -rf node_modules && pnpm -r exec rm -rf node_modules"
 	},
 	"devDependencies": {
-		"@eslint/js": "9.35.0",
-		"@kavsingh/eslint-plugin-filenames": "2.0.0-rc.2",
+		"@eslint/js": "9.36.0",
+		"@kavsingh/eslint-plugin-filenames": "2.0.0-rc.3",
 		"@tsconfig/node24": "24.0.1",
-		"@tsconfig/strictest": "2.0.5",
+		"@tsconfig/strictest": "2.0.6",
 		"@types/eslint": "9.6.1",
-		"@types/node": "24.3.1",
-		"cross-env": "10.0.0",
-		"eslint": "9.35.0",
+		"@types/node": "24.6.1",
+		"cross-env": "10.1.0",
+		"eslint": "9.36.0",
 		"eslint-config-prettier": "10.1.8",
 		"eslint-import-resolver-typescript": "4.4.4",
 		"eslint-plugin-import-x": "4.16.1",
 		"globals": "16.4.0",
+		"nx": "21.6.2",
 		"prettier": "3.6.2",
 		"rimraf": "6.0.1",
-		"turbo": "2.5.6",
-		"typescript": "5.9.2",
-		"typescript-eslint": "8.43.0"
+		"typescript": "5.9.3",
+		"typescript-eslint": "8.45.0"
 	}
 }

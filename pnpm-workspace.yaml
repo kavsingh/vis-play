@@ -3,8 +3,9 @@ packages:
   - packages/*
 
 onlyBuiltDependencies:
-  - '@swc/core'
-  - '@tailwindcss/oxide'
+  - "@swc/core"
+  - "@tailwindcss/oxide"
   - esbuild
+  - nx
   - unrs-resolver
   - wasm-pack
