@@ -20,7 +20,7 @@
 		"build": "nx build vis",
 		"test": "nx run-many -t test",
 		"lint": "nx run-many -t lint",
-		"preview": "nx run-many -t preview",
+		"preview": "nx preview vis",
 		"clean:nx": "rm -rf .nx && pnpm -r exec rm -rf .nx",
 		"clean:modules": "rm -rf node_modules && pnpm -r exec rm -rf node_modules"
 	},
