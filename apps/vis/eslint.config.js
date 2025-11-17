@@ -4,7 +4,11 @@ import { fileURLToPath } from "node:url";
 import vitest from "@vitest/eslint-plugin";
 import { defineConfig } from "eslint/config";
 import tailwindcss from "eslint-plugin-better-tailwindcss";
-import { getDefaultCallees } from "eslint-plugin-better-tailwindcss/api/defaults";
+import {
+	getDefaultAttributes,
+	getDefaultCallees,
+	getDefaultVariables,
+} from "eslint-plugin-better-tailwindcss/api/defaults";
 import jestDom from "eslint-plugin-jest-dom";
 import solid from "eslint-plugin-solid";
 import testingLibrary from "eslint-plugin-testing-library";
@@ -20,10 +24,8 @@ export default defineConfig(
 
 	{
 		ignores: [
-			"src-tauri/*",
 			"dist/*",
-			"dist-isolation/*",
-			"coverage/*",
+			"reports/*",
 			"**/__generated__/*",
 			"!**/__generated__/__mocks__/",
 		],
@@ -53,6 +55,15 @@ export default defineConfig(
 			"better-tailwindcss": {
 				entryPoint: "src/index.css",
 				callees: [...getDefaultCallees(), "tj", "tm"],
+				variables: [
+					...getDefaultVariables(),
+					[".+ClassNames", [{ match: "strings" }, { match: "objectValues" }]],
+				],
+				attributes: [
+					...getDefaultAttributes(),
+					["classNames", [{ match: "strings" }, { match: "objectValues" }]],
+					[".+ClassNames", [{ match: "strings" }, { match: "objectValues" }]],
+				],
 			},
 		},
 		extends: [

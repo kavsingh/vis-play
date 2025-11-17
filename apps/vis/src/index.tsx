@@ -1,4 +1,4 @@
-/// <reference types="vite/client" />
+/// <reference types="rolldown-vite/client" />
 
 import { render } from "solid-js/web";
 

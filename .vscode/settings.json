@@ -24,7 +24,12 @@
 
 	"files.associations": { "*.css": "tailwindcss" },
 	"tailwindCSS.validate": true,
-	"tailwindCSS.classAttributes": ["class", "classList"],
+	"tailwindCSS.classAttributes": [
+		"class",
+		"classList",
+		"className",
+		".+ClassNames"
+	],
 	"tailwindCSS.classFunctions": ["tj", "tm", "tv"],
 	"tailwindCSS.experimental.configFile": {
 		"apps/vis/src/index.css": "apps/vis/src/**/*"
@@ -33,16 +38,16 @@
 	"prettier.enable": true,
 
 	"[javascript]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[javascriptreact]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[typescript]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[typescriptreact]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[html]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
