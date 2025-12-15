@@ -21,7 +21,7 @@ export default mergeConfig(
 					"!**/*.{test,spec}.*",
 				],
 			},
-			server: { deps: { inline: [/solid-/] } }
+			server: { deps: { inline: [/solid-/] } },
 		},
 	}),
 );
