@@ -40,17 +40,17 @@
 		},
 
 		"TypeScript": {
-			"language_servers": ["vtsls", "eslint", "tailwindcss-language-server"],
+			"language_servers": ["tsgo", "eslint", "tailwindcss-language-server"],
 			"code_actions_on_format": { "source.fixAll.eslint": true }
 		},
 
 		"TSX": {
-			"language_servers": ["vtsls", "eslint", "tailwindcss-language-server"],
+			"language_servers": ["tsgo", "eslint", "tailwindcss-language-server"],
 			"code_actions_on_format": { "source.fixAll.eslint": true }
 		},
 
 		"JavaScript": {
-			"language_servers": ["vtsls", "eslint", "tailwindcss-language-server"],
+			"language_servers": ["tsgo", "eslint", "tailwindcss-language-server"],
 			"code_actions_on_format": { "source.fixAll.eslint": true }
 		},
 

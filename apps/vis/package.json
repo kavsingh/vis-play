@@ -10,7 +10,7 @@
 	"scripts": {
 		"tdd": "vitest",
 		"test": "vitest run",
-		"lint": "tsc --build --noEmit && eslint . && prettier . --check",
+		"lint": "tsgo --build --noEmit && eslint . && prettier . --check",
 		"dev": "vite",
 		"build": "rm -rf ./dist && vite build",
 		"preview": "vite preview"

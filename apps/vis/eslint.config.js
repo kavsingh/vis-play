@@ -76,7 +76,7 @@ export default defineConfig(
 					],
 				},
 			],
-
+			"import-x/no-unresolved": "off",
 			"better-tailwindcss/enforce-consistent-line-wrapping": "off",
 			"better-tailwindcss/enforce-shorthand-classes": "error",
 			"better-tailwindcss/no-unknown-classes": "error",
