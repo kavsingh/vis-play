@@ -1,5 +1,5 @@
 {
-	"formatter": "prettier",
+	"prettier": { "allowed": false },
 	"format_on_save": "on",
 	"hard_tabs": true,
 	"preferred_line_length": 80,
@@ -21,14 +21,16 @@
 			}
 		},
 
+		"oxfmt": {
+			"initialization_options": { "settings": { "run": "onSave" } }
+		},
+
 		"tailwindcss-language-server": {
 			"settings": {
 				"validate": true,
 				"classFunctions": ["tj", "tm", "tv"],
 				"experimental": {
-					"configFile": {
-						"apps/vis/src/app.css": "apps/vis/src/**/*"
-					}
+					"configFile": { "apps/vis/src/app.css": "apps/vis/src/**/*" }
 				}
 			}
 		}
@@ -40,17 +42,38 @@
 		},
 
 		"TypeScript": {
-			"language_servers": ["tsgo", "eslint", "tailwindcss-language-server"],
+			"language_servers": [
+				"tsgo",
+				"eslint",
+				"oxlint",
+				"oxmft",
+				"tailwindcss-language-server"
+			],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
 			"code_actions_on_format": { "source.fixAll.eslint": true }
 		},
 
 		"TSX": {
-			"language_servers": ["tsgo", "eslint", "tailwindcss-language-server"],
+			"language_servers": [
+				"tsgo",
+				"eslint",
+				"oxlint",
+				"oxmft",
+				"tailwindcss-language-server"
+			],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
 			"code_actions_on_format": { "source.fixAll.eslint": true }
 		},
 
 		"JavaScript": {
-			"language_servers": ["tsgo", "eslint", "tailwindcss-language-server"],
+			"language_servers": [
+				"tsgo",
+				"eslint",
+				"oxlint",
+				"oxmft",
+				"tailwindcss-language-server"
+			],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
 			"code_actions_on_format": { "source.fixAll.eslint": true }
 		},
 
@@ -58,7 +81,28 @@
 			"language_servers": [
 				"tailwindcss-intellisense-css",
 				"!vscode-css-language-server"
-			]
+			],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
+		},
+
+		"HTML": {
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
+		},
+
+		"Markdown": {
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
+		},
+
+		"JSON": {
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
+		},
+
+		"JSONC": {
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
+		},
+
+		"YAML": {
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
 		},
 
 		"TOML": {

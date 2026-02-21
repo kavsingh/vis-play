@@ -1,5 +1,4 @@
 import vitest from "@vitest/eslint-plugin";
-import { defineConfig } from "eslint/config";
 import tailwindcss from "eslint-plugin-better-tailwindcss";
 import { getDefaultSelectors } from "eslint-plugin-better-tailwindcss/defaults";
 import {
@@ -9,6 +8,7 @@ import {
 import jestDom from "eslint-plugin-jest-dom";
 import solid from "eslint-plugin-solid";
 import testingLibrary from "eslint-plugin-testing-library";
+import { defineConfig } from "eslint/config";
 import globals from "globals";
 
 import baseConfig from "../../eslint.config.js";

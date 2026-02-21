@@ -1,10 +1,9 @@
 import js from "@eslint/js";
 import filenames from "@kavsingh/eslint-plugin-filenames";
-import { defineConfig } from "eslint/config";
-import prettier from "eslint-config-prettier/flat";
 import { flatConfigs as importX } from "eslint-plugin-import-x";
+import { defineConfig } from "eslint/config";
 import globals from "globals";
-import { configs as tsEslint} from "typescript-eslint";
+import { configs as tsEslint } from "typescript-eslint";
 
 export default defineConfig(
 	{
@@ -37,7 +36,7 @@ export default defineConfig(
 
 	{
 		rules: {
-			"camelcase": "off",
+			camelcase: "off",
 			"no-console": "off",
 			"no-restricted-syntax": [
 				"warn",
@@ -78,22 +77,6 @@ export default defineConfig(
 			"import-x/no-self-import": "error",
 			"import-x/no-unused-modules": "error",
 			"import-x/no-useless-path-segments": "error",
-			"import-x/order": [
-				"warn",
-				{
-					"alphabetize": { order: "asc" },
-					"groups": [
-						"builtin",
-						"external",
-						"internal",
-						"parent",
-						["sibling", "index"],
-						"type",
-					],
-					"pathGroupsExcludedImportTypes": ["type"],
-					"newlines-between": "always",
-				},
-			],
 		},
 	},
 
@@ -116,11 +99,9 @@ export default defineConfig(
 		},
 	},
 
-	prettier,
-
 	{
 		rules: {
-			"curly": ["warn", "multi-line", "consistent"],
+			curly: ["warn", "multi-line", "consistent"],
 		},
 	},
 );

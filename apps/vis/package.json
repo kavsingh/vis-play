@@ -2,22 +2,19 @@
 	"name": "vis",
 	"version": "1.0.0-dev.0",
 	"description": "playin with vis",
+	"keywords": [],
+	"license": "MIT",
+	"author": "<author>",
 	"type": "module",
-	"engines": {
-		"node": ">=24"
-	},
 	"main": "./out/main/index.js",
 	"scripts": {
 		"tdd": "vitest",
 		"test": "vitest run",
-		"lint": "tsgo --build --noEmit && eslint . && prettier . --check",
+		"lint": "tsgo --build --noEmit && eslint . && oxfmt --check",
 		"dev": "vite",
 		"build": "rm -rf ./dist && vite build",
 		"preview": "vite preview"
 	},
-	"keywords": [],
-	"author": "<author>",
-	"license": "MIT",
 	"dependencies": {
 		"solid-js": "1.9.11",
 		"tailwind-merge": "3.5.0",
@@ -46,5 +43,8 @@
 		"vite-plugin-wasm": "3.5.0",
 		"vite-tsconfig-paths": "6.1.1",
 		"vitest": "4.0.18"
+	},
+	"engines": {
+		"node": ">=24"
 	}
 }
