@@ -17,14 +17,14 @@ wee_alloc = { version = "0.4", optional = true }
 version = "0.16"
 default-features = false
 features = [
-    "bevy_asset",
-    "bevy_core_pipeline",
-    "bevy_render",
-    "bevy_sprite",
-    "bevy_ui",
-    "bevy_winit",
-    "bevy_state",
-    "webgpu",
+	"bevy_asset",
+	"bevy_core_pipeline",
+	"bevy_render",
+	"bevy_sprite",
+	"bevy_state",
+	"bevy_ui",
+	"bevy_winit",
+	"webgpu",
 ]
 
 [target."cfg(debug_assertions)".dependencies]

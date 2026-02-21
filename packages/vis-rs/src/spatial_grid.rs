@@ -34,7 +34,11 @@ impl SpatialGrid {
 			.push((entity, movement));
 	}
 
-	pub fn get_neighbors(&self, position: &Vec2, radius: f32) -> Vec<(Entity, Movement, f32)> {
+	pub fn get_neighbors(
+		&self,
+		position: &Vec2,
+		radius: f32,
+	) -> Vec<(Entity, Movement, f32)> {
 		let mut neighbors = Vec::new();
 		let cell_radius = (radius / self.cell_size).ceil() as i32;
 		let center_cell = self.get_cell_index(position);

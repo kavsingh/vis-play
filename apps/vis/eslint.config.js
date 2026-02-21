@@ -1,14 +1,11 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
 import vitest from "@vitest/eslint-plugin";
 import { defineConfig } from "eslint/config";
 import tailwindcss from "eslint-plugin-better-tailwindcss";
+import { getDefaultSelectors } from "eslint-plugin-better-tailwindcss/defaults";
 import {
-	getDefaultAttributes,
-	getDefaultCallees,
-	getDefaultVariables,
-} from "eslint-plugin-better-tailwindcss/api/defaults";
+	MatcherType,
+	SelectorKind,
+} from "eslint-plugin-better-tailwindcss/types";
 import jestDom from "eslint-plugin-jest-dom";
 import solid from "eslint-plugin-solid";
 import testingLibrary from "eslint-plugin-testing-library";
@@ -16,8 +13,6 @@ import globals from "globals";
 
 import baseConfig from "../../eslint.config.js";
 import { testFilePatterns, testFileSuffixes } from "../../eslint.helpers.js";
-
-const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(
 	...baseConfig,
@@ -35,7 +30,7 @@ export default defineConfig(
 		settings: {
 			"import-x/resolver": {
 				"eslint-import-resolver-typescript": {
-					project: path.resolve(dirname, "tsconfig.json"),
+					project: "./tconfig.json",
 				},
 			},
 		},
@@ -47,30 +42,23 @@ export default defineConfig(
 			globals: { ...globals.browser },
 		},
 		settings: {
-			"import-x/resolver": {
-				"eslint-import-resolver-typescript": {
-					project: path.resolve(dirname, "src/tsconfig.json"),
-				},
-			},
 			"better-tailwindcss": {
-				entryPoint: "src/index.css",
-				callees: [...getDefaultCallees(), "tj", "tm"],
-				variables: [
-					...getDefaultVariables(),
-					[".+ClassNames", [{ match: "strings" }, { match: "objectValues" }]],
-				],
-				attributes: [
-					...getDefaultAttributes(),
-					["classNames", [{ match: "strings" }, { match: "objectValues" }]],
-					[".+ClassNames", [{ match: "strings" }, { match: "objectValues" }]],
+				entryPoint: "src/app.css",
+				selectors: [
+					...getDefaultSelectors(),
+					...["tj", "tm"].map((name) => ({
+						name,
+						kind: SelectorKind.Callee,
+						match: [{ type: MatcherType.String }],
+					})),
 				],
 			},
 		},
 		extends: [
 			// @ts-expect-error upstream types
 			solid.configs["flat/recommended"],
+			tailwindcss.configs["recommended-error"],
 		],
-		plugins: { "better-tailwindcss": tailwindcss },
 		rules: {
 			"no-console": "error",
 			"@typescript-eslint/no-restricted-imports": [
@@ -88,14 +76,10 @@ export default defineConfig(
 					],
 				},
 			],
-			...tailwindcss.configs["recommended"]?.rules,
-			"better-tailwindcss/enforce-consistent-class-order": [
-				"warn",
-				{ order: "official" },
-			],
+
 			"better-tailwindcss/enforce-consistent-line-wrapping": "off",
-			"better-tailwindcss/enforce-shorthand-classes": "warn",
-			"better-tailwindcss/no-conflicting-classes": "error",
+			"better-tailwindcss/enforce-shorthand-classes": "error",
+			"better-tailwindcss/no-unknown-classes": "error",
 		},
 	},
 

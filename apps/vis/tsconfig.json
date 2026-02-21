@@ -1,5 +1,8 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
-	"extends": ["../../tsconfig.base.json", "@tsconfig/node24/tsconfig.json"],
-	"include": ["./scripts", "./e2e", "./config", "./build", "./*.ts", "./*.js"]
+	"include": [],
+	"references": [
+		{ "path": "./tsconfig.node.json" },
+		{ "path": "./tsconfig.src.json" }
+	]
 }

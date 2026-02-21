@@ -82,7 +82,8 @@ pub fn run(count: i32) {
 fn setup(mut commands: Commands, world: Res<World>, window: Single<&Window>) {
 	commands.spawn(Camera2d);
 
-	let (width, height) = (window.resolution.width(), window.resolution.height());
+	let (width, height) =
+		(window.resolution.width(), window.resolution.height());
 
 	for _ in 0..world.count {
 		let position = Vec2 {
@@ -95,7 +96,8 @@ fn setup(mut commands: Commands, world: Res<World>, window: Single<&Window>) {
 		} * VELOCITY_LIMIT;
 		let mut transform = Transform::from_translation(position.extend(0.0));
 
-		transform.rotation = Quat::from_rotation_z(velocity.y.atan2(velocity.x));
+		transform.rotation =
+			Quat::from_rotation_z(velocity.y.atan2(velocity.x));
 
 		commands.spawn(BoidBundle {
 			marker: Boid,
@@ -124,9 +126,11 @@ fn update_world(
 	window: Single<&Window>,
 	query: Query<(Entity, &Boid, &Movement)>,
 ) {
-	let (width, height) = (window.resolution.width(), window.resolution.height());
+	let (width, height) =
+		(window.resolution.width(), window.resolution.height());
 
-	world.bounds = Rect::new(-width / 2.0, -height / 2.0, width / 2.0, height / 2.0);
+	world.bounds =
+		Rect::new(-width / 2.0, -height / 2.0, width / 2.0, height / 2.0);
 	world.grid.reset(Some(params.distances.mean()));
 
 	for (entity, _, movement) in query.iter() {
@@ -140,22 +144,21 @@ fn update_boids(
 	attractors: Res<Attractors>,
 	mut query: Query<(Entity, &Boid, &mut Movement, &mut Transform)>,
 ) {
-	query
-		.par_iter_mut()
-		.for_each(|(entity, _, mut movement, mut transform)| {
+	query.par_iter_mut().for_each(
+		|(entity, _, mut movement, mut transform)| {
 			mut_wrap_prosition(&mut movement, &world.bounds);
 
-			let mut seek = attractors
-				.positions
-				.iter()
-				.fold(Vec2::ZERO, |acc, attractor| {
+			let mut seek = attractors.positions.iter().fold(
+				Vec2::ZERO,
+				|acc, attractor| {
 					let distance = attractor.distance(movement.position);
 					if distance > 0.0 {
 						acc + (*attractor - movement.position) / distance
 					} else {
 						acc
 					}
-				});
+				},
+			);
 
 			if !attractors.positions.is_empty() {
 				seek /= attractors.positions.len() as f32;
@@ -185,7 +188,8 @@ fn update_boids(
 				}
 
 				if distance < params.distances.disperse && distance > 0.0 {
-					disperse += (movement.position - other_movement.position) / distance.powi(2);
+					disperse += (movement.position - other_movement.position)
+						/ distance.powi(2);
 				}
 			}
 
@@ -193,21 +197,25 @@ fn update_boids(
 				cohere = (cohere / cohere_count) - movement.position;
 			}
 
-			movement.acceleration = (normalize_steering_vector(movement.velocity, seek)
-				* params.weights.seek)
-				+ (normalize_steering_vector(movement.velocity, align) * params.weights.align)
-				+ (normalize_steering_vector(movement.velocity, cohere) * params.weights.cohere)
-				+ (normalize_steering_vector(movement.velocity, disperse)
-					* params.weights.disperse);
-			movement.velocity =
-				(movement.velocity + movement.acceleration).clamp_length_max(VELOCITY_LIMIT);
+			movement.acceleration =
+				(normalize_steering_vector(movement.velocity, seek)
+					* params.weights.seek)
+					+ (normalize_steering_vector(movement.velocity, align)
+						* params.weights.align)
+					+ (normalize_steering_vector(movement.velocity, cohere)
+						* params.weights.cohere)
+					+ (normalize_steering_vector(movement.velocity, disperse)
+						* params.weights.disperse);
+			movement.velocity = (movement.velocity + movement.acceleration)
+				.clamp_length_max(VELOCITY_LIMIT);
 
 			let vel = movement.velocity;
 
 			movement.position += vel;
 			transform.rotation = Quat::from_rotation_z(vel.y.atan2(vel.x));
 			transform.translation = movement.position.extend(0.0);
-		});
+		},
+	);
 }
 
 fn mut_wrap_prosition(movement: &mut Mut<Movement>, bounds: &Rect) {

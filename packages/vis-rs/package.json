@@ -20,6 +20,6 @@
 		"build": "wasm-pack build ."
 	},
 	"devDependencies": {
-		"wasm-pack": "0.13.1"
+		"wasm-pack": "0.14.0"
 	}
 }

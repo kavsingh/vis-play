@@ -1,0 +1,68 @@
+{
+	"formatter": "prettier",
+	"format_on_save": "on",
+	"hard_tabs": true,
+	"preferred_line_length": 80,
+
+	"lsp": {
+		"rust-analyzer": {
+			"initialization_options": {
+				"binary": { "path": "~/.cargo/bin/rust-analyzer" },
+				"check": { "command": "clippy" },
+				"diagnostics": { "styleLints": { "enable": true } },
+				"rustfmt": { "extraArgs": ["+nightly"] }
+			}
+		},
+
+		"eslint": {
+			"settings": {
+				"workingDirectories": [{ "mode": "auto" }],
+				"onIgnoredFiles": "off"
+			}
+		},
+
+		"tailwindcss-language-server": {
+			"settings": {
+				"validate": true,
+				"classFunctions": ["tj", "tm", "tv"],
+				"experimental": {
+					"configFile": {
+						"apps/vis/src/app.css": "apps/vis/src/**/*"
+					}
+				}
+			}
+		}
+	},
+
+	"languages": {
+		"Rust": {
+			"formatter": [{ "language_server": { "name": "rust-analyzer" } }]
+		},
+
+		"TypeScript": {
+			"language_servers": ["vtsls", "eslint", "tailwindcss-language-server"],
+			"code_actions_on_format": { "source.fixAll.eslint": true }
+		},
+
+		"TSX": {
+			"language_servers": ["vtsls", "eslint", "tailwindcss-language-server"],
+			"code_actions_on_format": { "source.fixAll.eslint": true }
+		},
+
+		"JavaScript": {
+			"language_servers": ["vtsls", "eslint", "tailwindcss-language-server"],
+			"code_actions_on_format": { "source.fixAll.eslint": true }
+		},
+
+		"CSS": {
+			"language_servers": [
+				"tailwindcss-intellisense-css",
+				"!vscode-css-language-server"
+			]
+		},
+
+		"TOML": {
+			"formatter": [{ "language_server": { "name": "tombi" } }]
+		}
+	}
+}
