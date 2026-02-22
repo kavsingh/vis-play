@@ -1,27 +1,30 @@
-import { defineConfig, mergeConfig } from "vitest/config";
+import { defineConfig, defineProject, mergeConfig } from "vitest/config";
 
 import baseConfig from "./vite.config.ts";
 
-export default mergeConfig(
-	baseConfig({ command: "build", mode: "production" }),
-	defineConfig({
-		resolve: { conditions: ["development", "browser"] },
+import type { ViteUserConfig } from "vitest/config";
+
+export default defineConfig((configEnv) => {
+	return {
 		test: {
-			include: ["src/**/*.{test,spec}.?(m|c)[tj]s?(x)"],
-			environment: "jsdom",
-			setupFiles: ["./src/vitest.setup.ts"],
 			clearMocks: true,
-			coverage: {
-				reportsDirectory: "./reports/coverage",
-				include: [
-					"src",
-					"!**/__generated__",
-					"!**/__mocks__",
-					"!**/__test*__",
-					"!**/*.{test,spec}.*",
-				],
-			},
-			server: { deps: { inline: [/solid-/] } },
+			expect: { requireAssertions: true },
+			coverage: { provider: "v8", reportsDirectory: "./reports/coverage" },
+			projects: [
+				mergeConfig(
+					baseConfig(configEnv),
+					defineProject({
+						resolve: { conditions: ["development", "browser"] },
+						test: {
+							name: "app",
+							include: ["src/**/*.test.{ts,tsx}"],
+							environment: "jsdom",
+							setupFiles: ["./src/vitest.setup.ts"],
+							server: { deps: { inline: true } },
+						},
+					}),
+				),
+			],
 		},
-	}),
-);
+	} satisfies ViteUserConfig;
+});
