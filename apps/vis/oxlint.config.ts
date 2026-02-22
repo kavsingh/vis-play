@@ -6,6 +6,8 @@ import {
 	MatcherType,
 	SelectorKind,
 } from "eslint-plugin-better-tailwindcss/types";
+import jestDom from "eslint-plugin-jest-dom";
+import testingLibrary from "eslint-plugin-testing-library";
 import { defineConfig } from "oxlint";
 
 import base from "../../oxlint.config.ts";
@@ -62,12 +64,16 @@ export default defineConfig({
 		{
 			files: ["./src/**/*.test.{ts,tsx}"],
 			plugins: ["vitest"],
+			jsPlugins: ["eslint-plugin-jest-dom", "eslint-plugin-testing-library"],
 			rules: {
 				"eslint/no-console": "off",
 
 				"vitest/no-disabled-tests": "error",
 				"vitest/no-focused-tests": "error",
 				"vitest/no-import-node-test": "error",
+
+				...jestDom.configs["flat/recommended"].rules,
+				...testingLibrary.configs["flat/dom"].rules,
 			},
 		},
 	],

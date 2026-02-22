@@ -1,5 +1,3 @@
-/// <reference types="rolldown-vite/client" />
-
 import { render } from "solid-js/web";
 
 import "./app.css";
