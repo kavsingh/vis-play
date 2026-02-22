@@ -1,7 +1,7 @@
-import Theme from "./theme.tsx";
-import Vis from "./vis.tsx";
+import { Theme } from "./theme.tsx";
+import { Vis } from "./vis.tsx";
 
-export default function App() {
+export function App() {
 	return (
 		<>
 			<Theme />

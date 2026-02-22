@@ -7,5 +7,4 @@ allowBuilds:
   esbuild: true
   nx: true
   tombi: true
-  unrs-resolver: true
   wasm-pack: true

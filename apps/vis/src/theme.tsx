@@ -1,11 +1,11 @@
 import { onCleanup, onMount } from "solid-js";
 
-export default function Theme() {
-	const darkSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+function handleQuery(ev: { matches: boolean }) {
+	document.documentElement.classList.toggle("dark", ev.matches);
+}
 
-	function handleQuery(ev: { matches: boolean }) {
-		document.documentElement.classList.toggle("dark", ev.matches);
-	}
+export function Theme() {
+	const darkSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 	onMount(() => {
 		handleQuery({ matches: darkSchemeQuery.matches });

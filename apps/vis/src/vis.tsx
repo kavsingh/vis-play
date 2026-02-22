@@ -4,7 +4,23 @@ import { scopedLogger } from "#logger";
 
 const logger = scopedLogger("<Vis />");
 
-export default function Vis() {
+async function startVis() {
+	const { vis } = await import("vis-rs");
+
+	logger.info("starting vis");
+
+	try {
+		vis(import.meta.env.DEV ? 600 : 6_000);
+	} catch (cause) {
+		if (/isn't actually an error/i.test(String(cause))) {
+			logger.debug(cause);
+		} else {
+			logger.error("failed to start", cause);
+		}
+	}
+}
+
+export function Vis() {
 	let containerRef: HTMLDivElement | undefined;
 	let canvasRef: HTMLCanvasElement | undefined;
 
@@ -15,14 +31,17 @@ export default function Vis() {
 		canvasRef.style.height = `${containerRef.offsetHeight}px`;
 	}
 
-	onMount(() => {
-		startVis()
-			.then(() => {
-				window.addEventListener("resize", updateSizes);
-				updateSizes();
-			})
-			.catch(logger.error);
-	});
+	async function mountVis() {
+		try {
+			await startVis();
+			window.addEventListener("resize", updateSizes);
+			updateSizes();
+		} catch (cause) {
+			logger.error("failed to start", cause);
+		}
+	}
+
+	onMount(() => void mountVis());
 
 	onCleanup(() => {
 		window.removeEventListener("resize", updateSizes);
@@ -40,20 +59,4 @@ export default function Vis() {
 			/>
 		</div>
 	);
-}
-
-async function startVis() {
-	const { vis } = await import("vis-rs");
-
-	logger.info("starting vis");
-
-	try {
-		vis(import.meta.env.DEV ? 600 : 6_000);
-	} catch (cause) {
-		if (/isn't actually an error/i.test(String(cause))) {
-			logger.debug(cause);
-		} else {
-			logger.error("failed to start", cause);
-		}
-	}
 }

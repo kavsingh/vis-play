@@ -1,13 +1,24 @@
-/* eslint-disable no-console */
+interface Logger {
+	debug: typeof console.debug;
+	info: typeof console.info;
+	warn: typeof console.warn;
+	error: typeof console.error;
+}
 
-export const logger: Logger = {
+function noop(..._: unknown[]) {
+	// noop
+}
+
+/* oxlint-disable oxlint/no-console */
+const logger: Logger = {
 	debug: import.meta.env.DEV ? console.debug : noop,
 	info: import.meta.env.DEV ? console.info : noop,
 	warn: console.warn,
 	error: console.error,
 };
+/* oxlint-enable */
 
-export function scopedLogger(scope: string): Logger {
+function scopedLogger(scope: string): Logger {
 	const scopeTag = `[${scope}]`;
 
 	return {
@@ -18,13 +29,5 @@ export function scopedLogger(scope: string): Logger {
 	};
 }
 
-export type Logger = {
-	debug: typeof console.debug;
-	info: typeof console.info;
-	warn: typeof console.warn;
-	error: typeof console.error;
-};
-
-function noop(..._: unknown[]) {
-	// noop
-}
+export { logger, scopedLogger };
+export type { Logger };

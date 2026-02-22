@@ -1,50 +1,46 @@
 {
-	"name": "vis-play",
-	"version": "0.0.0",
-	"private": true,
-	"description": "playing with vis",
-	"keywords": [],
-	"license": "MIT",
-	"author": "<author>",
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:kavsingh/vis-play"
-	},
-	"type": "module",
-	"scripts": {
-		"dev": "nx run-many -t dev",
-		"build": "nx build vis",
-		"test": "nx run-many -t test --outputStyle stream",
-		"lint": "nx run-many -t lint --outputStyle stream",
-		"preview": "nx preview vis",
-		"clean:nx": "rimraf ./**/.nx --glob",
-		"clean:modules": "rimraf ./**/node_modules --glob",
-		"clean:targets": "rimraf ./**/target --glob"
-	},
-	"devDependencies": {
-		"@eslint/js": "9.39.3",
-		"@kavsingh/eslint-plugin-filenames": "2.0.0-rc.3",
-		"@tsconfig/node24": "24.0.4",
-		"@tsconfig/strictest": "2.0.8",
-		"@types/eslint": "9.6.1",
-		"@types/node": "25.3.0",
-		"@typescript/native-preview": "7.0.0-dev.20260221.1",
-		"cross-env": "10.1.0",
-		"eslint": "9.39.3",
-		"eslint-import-resolver-typescript": "4.4.4",
-		"eslint-plugin-import-x": "4.16.1",
-		"globals": "17.3.0",
-		"nx": "22.5.2",
-		"oxfmt": "0.34.0",
-		"oxlint": "1.49.0",
-		"oxlint-tsgolint": "0.14.2",
-		"rimraf": "6.1.3",
-		"tombi": "0.7.31",
-		"typescript": "5.9.3",
-		"typescript-eslint": "8.56.0"
-	},
-	"engines": {
-		"node": ">=24"
-	},
-	"packageManager": "pnpm@10.30.1+sha512.3590e550d5384caa39bd5c7c739f72270234b2f6059e13018f975c313b1eb9fefcc09714048765d4d9efe961382c312e624572c0420762bdc5d5940cdf9be73a"
+  "name": "vis-play",
+  "version": "0.0.0",
+  "private": true,
+  "description": "playing with vis",
+  "keywords": [],
+  "license": "MIT",
+  "author": "<author>",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kavsingh/vis-play"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "nx run-many -t dev",
+    "build": "nx build vis",
+    "test": "nx run-many -t test --outputStyle stream",
+    "lint": "nx run-many -t lint --outputStyle stream",
+    "preview": "nx preview vis",
+    "clean:nx": "rimraf ./**/.nx --glob",
+    "clean:modules": "rimraf ./**/node_modules --glob",
+    "clean:targets": "rimraf ./**/target --glob"
+  },
+  "devDependencies": {
+    "@tsconfig/node24": "24.0.4",
+    "@tsconfig/strictest": "2.0.8",
+    "@types/node": "25.3.0",
+    "@typescript/native-preview": "7.0.0-dev.20260221.1",
+    "cross-env": "10.1.0",
+    "globals": "17.3.0",
+    "nx": "22.5.2",
+    "oxfmt": "0.34.0",
+    "oxlint": "1.49.0",
+    "oxlint-tsgolint": "0.14.2",
+    "rimraf": "6.1.3",
+    "tombi": "0.7.31"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.30.1+sha512.3590e550d5384caa39bd5c7c739f72270234b2f6059e13018f975c313b1eb9fefcc09714048765d4d9efe961382c312e624572c0420762bdc5d5940cdf9be73a",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }
