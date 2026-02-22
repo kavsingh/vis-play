@@ -15,7 +15,9 @@ async function startVis() {
 		if (/isn't actually an error/i.test(String(cause))) {
 			logger.debug(cause);
 		} else {
-			logger.error("failed to start", cause);
+			throw cause instanceof Error
+				? cause
+				: new Error(String(cause), { cause });
 		}
 	}
 }
