@@ -10,12 +10,15 @@
 			"cache": true
 		},
 		"dev": {
+			"dependsOn": ["^build"],
 			"cache": false
 		},
 		"test": {
+			"dependsOn": ["^build"],
 			"cache": false
 		},
 		"lint": {
+			"dependsOn": ["^build"],
 			"cache": false
 		}
 	}
