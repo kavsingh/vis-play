@@ -7,6 +7,7 @@ import {
 	SelectorKind,
 } from "eslint-plugin-better-tailwindcss/types";
 import jestDom from "eslint-plugin-jest-dom";
+import solid from "eslint-plugin-solid";
 import testingLibrary from "eslint-plugin-testing-library";
 import { defineConfig } from "oxlint";
 
@@ -32,8 +33,7 @@ export default defineConfig({
 	overrides: [
 		{
 			files: ["./src/**/*.{ts,tsx}"],
-			plugins: ["import"],
-			jsPlugins: ["eslint-plugin-better-tailwindcss"],
+			jsPlugins: ["eslint-plugin-solid", "eslint-plugin-better-tailwindcss"],
 			rules: {
 				"eslint/no-console": "error",
 				"eslint/no-restricted-imports": [
@@ -55,10 +55,18 @@ export default defineConfig({
 				"import/no-nodejs-modules": "error",
 				"import/no-unassigned-import": ["error", { allow: ["**/*.css"] }],
 
+				...solid.configs["flat/typescript"].rules,
+				"solid/jsx-uses-vars": "off",
+
 				...tailwindcss.configs["recommended-error"].rules,
 				"better-tailwindcss/enforce-consistent-line-wrapping": "off",
 				"better-tailwindcss/enforce-shorthand-classes": "error",
 			},
+		},
+
+		{
+			files: ["./src/**/*.tsx"],
+			plugins: ["jsx-a11y"],
 		},
 
 		{

@@ -15,7 +15,7 @@
 	],
 	"printWidth": 80,
 	"useTabs": true,
-	"experimentalSortImports": {
+	"sortImports": {
 		"order": "asc",
 		"groups": [
 			["builtin"],
@@ -25,5 +25,6 @@
 			["sibling", "index"],
 			["type"]
 		]
-	}
+	},
+	"sortTailwindcss": null
 }
