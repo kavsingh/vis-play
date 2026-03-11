@@ -10,12 +10,12 @@
 				"binary": { "path": "~/.cargo/bin/rust-analyzer" },
 				"check": { "command": "clippy" },
 				"diagnostics": { "styleLints": { "enable": true } },
-				"rustfmt": { "extraArgs": ["+nightly"] },
-			},
+				"rustfmt": { "extraArgs": ["+nightly"] }
+			}
 		},
 
 		"oxlint": {
-			"initialization_options": { "settings": { "typeAware": true } },
+			"initialization_options": { "settings": { "typeAware": true } }
 		},
 
 		"tailwindcss-language-server": {
@@ -23,15 +23,15 @@
 				"validate": true,
 				"classFunctions": ["tj", "tm", "tv"],
 				"experimental": {
-					"configFile": { "apps/vis/src/app.css": "apps/vis/src/**/*" },
-				},
-			},
-		},
+					"configFile": { "apps/vis/src/app.css": "apps/vis/src/**/*" }
+				}
+			}
+		}
 	},
 
 	"languages": {
 		"Rust": {
-			"formatter": [{ "language_server": { "name": "rust-analyzer" } }],
+			"formatter": [{ "language_server": { "name": "rust-analyzer" } }]
 		},
 
 		"TypeScript": {
@@ -39,10 +39,10 @@
 				"tsgo",
 				"oxlint",
 				"oxfmt",
-				"tailwindcss-language-server",
+				"tailwindcss-language-server"
 			],
 			"formatter": [{ "language_server": { "name": "oxfmt" } }],
-			"code_actions_on_format": { "source.fixAll.oxc": true },
+			"code_actions_on_format": { "source.fixAll.oxc": true }
 		},
 
 		"TSX": {
@@ -50,49 +50,49 @@
 				"tsgo",
 				"oxlint",
 				"oxfmt",
-				"tailwindcss-language-server",
+				"tailwindcss-language-server"
 			],
 			"formatter": [{ "language_server": { "name": "oxfmt" } }],
-			"code_actions_on_format": { "source.fixAll.oxc": true },
+			"code_actions_on_format": { "source.fixAll.oxc": true }
 		},
 
 		"JavaScript": {
 			"language_servers": ["tsgo", "oxlint", "eslint", "oxfmt"],
 			"formatter": [{ "language_server": { "name": "oxfmt" } }],
-			"code_actions_on_format": { "source.fixAll.oxc": true },
+			"code_actions_on_format": { "source.fixAll.oxc": true }
 		},
 
 		"CSS": {
 			"language_servers": [
 				"tailwindcss-intellisense-css",
 				"tailwindcss-language-server",
-				"!vscode-css-language-server",
+				"!vscode-css-language-server"
 			],
-			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
 		},
 
 		"HTML": {
-			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
 		},
 
 		"Markdown": {
-			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
 		},
 
 		"JSON": {
-			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
 		},
 
 		"JSONC": {
-			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
 		},
 
 		"YAML": {
-			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
 		},
 
 		"TOML": {
-			"formatter": [{ "language_server": { "name": "tombi" } }],
-		},
-	},
+			"formatter": [{ "language_server": { "name": "tombi" } }]
+		}
+	}
 }

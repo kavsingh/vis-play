@@ -1,6 +1,7 @@
-{
-	"$schema": "./node_modules/oxfmt/configuration_schema.json",
-	"ignorePatterns": [
+import { defineConfig } from "oxfmt";
+
+export default defineConfig({
+	ignorePatterns: [
 		"**/.nx/**",
 		"**/dist/**",
 		"**/gen/**",
@@ -11,20 +12,20 @@
 		"**/__generated__/**",
 		"!**/__generated__/mocks/**",
 		"**/*.lock",
-		"pnpm-*.yaml"
+		"pnpm-*.yaml",
 	],
-	"printWidth": 80,
-	"useTabs": true,
-	"sortImports": {
-		"order": "asc",
-		"groups": [
+	printWidth: 80,
+	useTabs: true,
+	sortImports: {
+		order: "asc",
+		groups: [
 			["builtin"],
 			["external"],
 			["subpath", "internal"],
 			["parent"],
 			["sibling", "index"],
-			["type"]
-		]
+			["type"],
+		],
 	},
-	"sortTailwindcss": null
-}
+	sortTailwindcss: null,
+});

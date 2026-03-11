@@ -5,6 +5,7 @@ packages:
 allowBuilds:
   '@swc/core': true
   esbuild: true
+  lefthook: true
   nx: true
   tombi: true
   wasm-pack: true
