@@ -25,11 +25,6 @@ export default defineConfig({
 
 		"import/consistent-type-specifier-style": ["error", "prefer-top-level"],
 		"import/exports-last": "error",
-		"import/extensions": [
-			"error",
-			"always",
-			{ checkTypeImports: true, ignorePackages: true },
-		],
 		"import/group-exports": "error",
 		"import/no-cycle": "error",
 		"import/no-default-export": "error",

@@ -19,19 +19,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v6
-        with:
-          node-version-file: .node-version
-          cache: pnpm
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version-file: package.json }
       - uses: dtolnay/rust-toolchain@stable
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm build
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
-        with:
-          path: apps/vis/dist
+        with: { path: apps/vis/dist }
 
   deploy:
     environment:

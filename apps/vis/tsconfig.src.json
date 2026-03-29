@@ -10,8 +10,9 @@
 		"lib": ["esnext", "dom", "dom.iterable", "dom.asynciterable"],
 		"module": "esnext",
 		"moduleResolution": "bundler",
-		"paths": { "#*": ["./src/*"] },
+		"paths": { "~/*": ["./src/*"] },
 		"target": "esnext",
+		"types": ["vite/client", "@testing-library/jest-dom"],
 		"sourceMap": true
 	}
 }

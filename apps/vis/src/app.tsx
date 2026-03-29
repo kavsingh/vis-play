@@ -1,5 +1,5 @@
-import { Theme } from "./theme.tsx";
-import { Vis } from "./vis.tsx";
+import { Theme } from "./theme";
+import { Vis } from "./vis";
 
 export function App() {
 	return (

@@ -4,7 +4,7 @@ pre-commit:
     - run: bun oxlint --type-aware --type-check --max-warnings=0 {staged_files}
       root: "apps/vis"
       glob: "**/*.{ts,tsx,js,jsx}"
-    - run: pnpm oxfmt --no-error-on-unmatched-pattern {staged_files}
+    - run: bun oxfmt --no-error-on-unmatched-pattern {staged_files}
       root: "apps/vis"
       glob: "**/*.{ts,tsx,js,jsx,json,jsonc,yaml,yml,html,css}"
       stage_fixed: true

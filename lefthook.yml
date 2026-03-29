@@ -5,7 +5,7 @@ extends:
 pre-push:
   parallel: true
   jobs:
-    - run: pnpm lint
+    - run: bun lint
       glob: "**/*.{ts,tsx,js,jsx}"
-    - run: pnpm tombi lint
+    - run: bun tombi lint
       glob: "**/*.toml"

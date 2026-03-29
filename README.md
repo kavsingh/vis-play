@@ -1,5 +1,4 @@
 ```shell
-corepack enable pnpm
-pnpm i
-pnpm dev
+bun i
+bun run dev
 ```

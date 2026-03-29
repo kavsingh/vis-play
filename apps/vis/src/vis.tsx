@@ -1,6 +1,6 @@
 import { onCleanup, onMount } from "solid-js";
 
-import { scopedLogger } from "#logger";
+import { scopedLogger } from "./logger";
 
 const logger = scopedLogger("<Vis />");
 

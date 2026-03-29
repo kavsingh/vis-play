@@ -12,7 +12,6 @@ export default defineConfig({
 		"**/__generated__/**",
 		"!**/__generated__/mocks/**",
 		"**/*.lock",
-		"pnpm-*.yaml",
 	],
 	printWidth: 80,
 	useTabs: true,
@@ -27,5 +26,4 @@ export default defineConfig({
 			["type"],
 		],
 	},
-	sortTailwindcss: null,
 });

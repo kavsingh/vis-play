@@ -1,25 +1,37 @@
 {
-	"$schema": "./node_modules/nx/schemas/nx-schema.json",
-	"targetDefaults": {
-		"build": {
-			"dependsOn": ["^build"],
-			"outputs": ["{projectRoot}/dist/**", "{projectRoot}/pkg/**"],
-			"cache": true
-		},
-		"preview": {
-			"cache": true
-		},
-		"dev": {
-			"dependsOn": ["^build"],
-			"cache": false
-		},
-		"test": {
-			"dependsOn": ["^build"],
-			"cache": false
-		},
-		"lint": {
-			"dependsOn": ["^build"],
-			"cache": false
-		}
-	}
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "{projectRoot}/dist/**",
+        "{projectRoot}/pkg/**"
+      ],
+      "cache": true
+    },
+    "preview": {
+      "cache": true
+    },
+    "dev": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false
+    },
+    "test": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false
+    },
+    "lint": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false
+    }
+  },
+  "analytics": false
 }

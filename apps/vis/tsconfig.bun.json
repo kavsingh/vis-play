@@ -1,11 +1,12 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
-	"include": ["./*.ts", "./*.js"],
-	"extends": ["./tsconfig.base.json", "@tsconfig/bun/tsconfig.json"],
+	"include": ["./*.ts", "./*.js", "../../*.config.ts"],
+	"extends": ["../../tsconfig.base.json", "@tsconfig/bun/tsconfig.json"],
 	"compilerOptions": {
+		"composite": true,
+		"emitDeclarationOnly": true,
 		"module": "nodenext",
 		"moduleResolution": "nodenext",
-		"noEmit": true,
 		"noPropertyAccessFromIndexSignature": false
 	}
 }
