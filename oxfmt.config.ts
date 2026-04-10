@@ -26,4 +26,7 @@ export default defineConfig({
 			["type"],
 		],
 	},
+	overrides: [
+		{ files: ["*.{json,jsonc}"], options: { trailingComma: "none" } },
+	],
 });
