@@ -16,7 +16,7 @@ const logger: Logger = {
 	warn: console.warn,
 	error: console.error,
 };
-/* oxlint-enable */
+/* oxlint-enable oxlint/no-console */
 
 function scopedLogger(scope: string): Logger {
 	const scopeTag = `[${scope}]`;

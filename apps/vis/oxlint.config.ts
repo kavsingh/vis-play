@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import tailwindcss from "eslint-plugin-better-tailwindcss";
 import { getDefaultSelectors } from "eslint-plugin-better-tailwindcss/defaults";
 import {
@@ -19,7 +17,8 @@ export default defineConfig({
 	settings: {
 		vitest: { typecheck: true },
 		"better-tailwindcss": {
-			entryPoint: path.resolve(import.meta.dirname, "./src/app.css"),
+			cwd: import.meta.dirname,
+			entryPoint: "src/app.css",
 			selectors: [
 				...getDefaultSelectors(),
 				...["tj", "tm"].map((name) => ({

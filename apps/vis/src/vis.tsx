@@ -58,6 +58,7 @@ export function Vis() {
 				id="vis-rs"
 				class="focus:outline-none"
 				ref={(el) => (canvasRef = el)}
+				aria-label="vis canvas"
 			/>
 		</div>
 	);

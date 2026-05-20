@@ -1,0 +1,22 @@
+{
+	"$schema": "./node_modules/lefthook/schema.json",
+	"extends": ["apps/*/lefthook.json", "packages/*/lefthook.json"],
+	"pre-commit": {
+		"jobs": [
+			{
+				"glob": "*.{ts,tsx,js,tsx,html,css,json,jsonc,yml,yaml,md}",
+				"run": "bun oxfmt --no-error-on-unmatched-pattern {staged_files}",
+				"stage_fixed": true
+			},
+			{
+				"glob": "*.toml",
+				"run": "bun tombi format {staged_files}",
+				"stage_fixed": true
+			}
+		]
+	},
+	"pre-push": {
+		"parallel": true,
+		"jobs": [{ "run": "bun lint" }, { "run": "bun tombi lint" }]
+	}
+}

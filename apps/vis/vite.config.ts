@@ -4,17 +4,6 @@ import { checker } from "vite-plugin-checker";
 import solid from "vite-plugin-solid";
 import wasm from "vite-plugin-wasm";
 
-import type { PluginOption } from "vite";
-
-function configChecker(mode: string) {
-	if (mode !== "development") return undefined;
-
-	return checker({
-		overlay: { initialIsOpen: false },
-		oxlint: { lintCommand: "oxlint --type-aware --type-check" },
-	});
-}
-
 export default defineConfig(({ mode }) => ({
 	base: "/vis-play/",
 	resolve: { tsconfigPaths: true },
@@ -24,12 +13,13 @@ export default defineConfig(({ mode }) => ({
 		supported: { "top-level-await": true },
 	},
 	worker: { format: "es" },
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 	plugins: [
 		solid(),
 		tailwindcss(),
 		// @ts-expect-error import resolution
 		wasm(),
-		configChecker(mode),
-	] as PluginOption[],
+		mode === "development"
+			? checker({ oxlint: true, overlay: { initialIsOpen: false } })
+			: undefined,
+	],
 }));

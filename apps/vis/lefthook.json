@@ -1,0 +1,11 @@
+{
+	"$schema": "../../node_modules/lefthook/schema.json",
+	"pre-commit": {
+		"jobs": [
+			{
+				"glob": "*.{ts,tsx,js,jsx}",
+				"run": "bun oxlint --no-error-on-unmatched-pattern {staged_files}"
+			}
+		]
+	}
+}
